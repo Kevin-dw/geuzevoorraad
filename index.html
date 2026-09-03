@@ -117,6 +117,14 @@ input::placeholder{color:var(--tekstFlauw)}
 input:focus,select:focus{outline:none;border-color:var(--randSterk);background:var(--paneel)}
 select{appearance:none}
 label.veld{display:block;margin-bottom:12px}
+/* Wachtwoordveld met een oogje erin om het even zichtbaar te maken. */
+.wwvak{position:relative;display:block}
+.wwvak input{width:100%;padding-right:54px}
+.wwoog{position:absolute;right:7px;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;
+  border:0;background:none;color:var(--tekstFlauw);cursor:pointer;border-radius:50%;padding:0}
+.wwoog:hover{color:var(--tekst);background:var(--kaart)}
+.wwoog svg{width:19px;height:19px}
 label.veld>span{display:block;font-size:.76rem;font-weight:600;color:var(--tekstZacht);margin-bottom:5px}
 .raster2{display:grid;border:0;padding:0;margin:0;min-width:0;grid-template-columns:1fr 1fr;gap:0 12px}
 
@@ -418,6 +426,11 @@ body.licht .merkje.lime{background:var(--limeZacht);color:var(--limeTekst)}
 .syncbalk>div{margin-right:auto}
 .syncbalk{flex-wrap:wrap}
 /* Naam links, aan/uit rechts, ook als het paneel smal is. */
+.kopielijst{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
+.kopierij{display:flex;align-items:center;gap:10px;background:var(--kaart);
+  border:1px solid var(--rand);border-radius:var(--r-klein);padding:8px 12px}
+.kopierij>span{flex:1;font-size:.88rem;font-weight:600}
+.kopierij .knop{flex:0 0 auto;min-height:32px;padding:0 12px;font-size:.8rem}
 .scanrij{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .scanrij>span{font-size:.9rem;font-weight:600;flex:1 1 90px;min-width:0}
 .scanrij .richting{flex:0 0 auto;width:auto;padding:3px;margin:0;flex-wrap:nowrap}
@@ -557,6 +570,7 @@ video#video{width:100%;max-height:50vh;background:#000;border-radius:var(--r-mid
       <button class="rondeknop alleenmobiel" title="Instellingen" onclick="app.ga('instellingen')" id="knopInstel"></button>
     </header>
     <div class="afdbalk" id="afdBalk"></div>
+    <div id="backupwaarschuwing"></div>
     <div id="versiewaarschuwing"></div>
     <div id="syncwaarschuwing"></div>
     <div id="lijstuitnodiging"></div>
@@ -581,6 +595,8 @@ const PADEN={
   kopie:'<rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5v-3a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/>',
   mail:'<rect x="2.5" y="5" width="19" height="14" rx="2.4"/><path d="m3.4 6.5 8.6 6 8.6-6"/>',
   kruis:'<path d="M6 6l12 12M18 6L6 18"/>',
+  oog:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+  oogdicht:'<path d="M10.6 6.2A9.8 9.8 0 0 1 12 6c6.4 0 10 6 10 6a17 17 0 0 1-3 3.6"/><path d="M6.5 7.9A16.6 16.6 0 0 0 2 12s3.6 6 10 6a9.6 9.6 0 0 0 3.9-.8"/><path d="M3 3l18 18"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
   potlood:'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
   bericht:'<path d="M18 8.5a6 6 0 1 0-12 0c0 6-2.2 7.5-2.2 7.5h16.4S18 14.5 18 8.5"/><path d="M13.7 19.5a2 2 0 0 1-3.4 0"/>',
   voorraad:'<path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/>',
@@ -901,7 +917,7 @@ nl:{
  dezeuitvoering:"Deze uitvoering", versievan:"Versie van",
  geenresultaat:"Niets gevonden. Pas de zoekterm aan.",
  barcodeoptioneel:"Barcode van de werkorder (optioneel)", leeglatenprima:"Leeg laten is prima. Dan gebruikt de app zijn eigen code", kanniet39:"Kan niet worden gelezen.", code39kent:"Code 39 kent deze tekens niet:", toegestaan:"Toegestaan zijn cijfers, hoofdletters en", scanopent:"Scan je deze code op de werkorder, dan opent deze coating.", ookop:"Deze code staat ook op", anderecoatings:"andere coatings; bij scannen kun je kiezen.", cameranietbeschikbaar:"De camera is hier niet beschikbaar.", cameranietbeschikbaarsub:"Browsers geven de camera alleen vrij via https. Gebruik Foto maken of typ de code in.", geentoegangcamera:"Geen toegang tot de camera.", camtoestaan:"Sta de camera toe in je browserinstellingen en laad de pagina opnieuw.", geencamera:"Er is geen camera gevonden op dit apparaat.", fout:"Fout:", lampaan:"Lamp aan", lampuit:"Lamp uit", zoom:"Zoom", lampwerktniet:"Lamp werkt niet op dit toestel", opslagwaarschuwing:"De gegevens staan in de opslag van deze browser op dit apparaat. Ze gaan niet vanzelf mee naar een ander toestel en verdwijnen als je je browsergegevens wist. Maak dus regelmatig een back-up.", camerahelp:"Browsers geven de camera alleen vrij via https of localhost. Open dit bestand dus niet met dubbelklikken, maar zet het op een webadres met https.", versieuitleg:"De app werkt zichzelf niet bij. Krijg je een nieuwe versie, zet dat bestand dan op hetzelfde webadres. Sluit de app op je telefoon daarna helemaal af en open hem opnieuw. Maak voor de zekerheid eerst een back-up.", vraagwissen:"Alle coatings en mutaties definitief wissen?", vraagzeker:"Zeker weten? Download eerst een back-up als je twijfelt.", vraagverwijder:"Deze coating en zijn historie definitief verwijderen?", vraagvervang:"De huidige gegevens worden vervangen door de back-up. Doorgaan?", vraagvoorbeeld:"Voorbeelddata toevoegen aan wat er al staat?", ligtnog:"Er ligt nog", boekeerstuit:"Boek eerst alles uit.", backupgedownload:"Back-up gedownload", backupingelezen:"Back-up ingelezen", inlezenmislukt:"Inlezen mislukt:", geenbackup:"dit is geen back-up van dit systeem", voorbeeldgeladen:"Voorbeelddata geladen", merkkleurverplicht:"Merk en kleur zijn verplicht", tekensniet39:"Deze tekens passen niet in Code 39:", ingeboekt:"ingeboekt",
- inloggen:"Inloggen", gebruikersnaam:"Gebruikersnaam", onbekendeinlog:"Onbekende gebruikersnaam", uitloggen:"Uitloggen", afdeling:"Afdeling", poedercoating:"Poedercoating", natlak:"Natlak", liter:"liter", literper:"liter per blik", aantalbussen:"Aantal blikken", literperbus:"Aantal liter per blik", bus:"blik", bussen:"blikken", perbus:"per blik", alleenkijken:"Alleen kijken", alleenkijkensub:"Je bent ingelogd als Kantoor. Je kunt alles bekijken, maar niets wijzigen.", ingelogdals:"Ingelogd als", liveverbonden:"Live verbonden", livelokaal:"Alleen op dit apparaat", synchroniseren:"Synchroniseren", syncadres:"Sync-adres", syncsleutel:"Sleutel (X-Master-Key)", syncuitleg:"Vul een adres in en alle apparaten delen dezelfde voorraad, met een verversing elke 5 seconden. Laat het leeg om alleen op dit apparaat te werken.", synctesten:"Verbinding testen", syncok:"Verbinding werkt", syncfout:"Verbinding mislukt", laatstsync:"Laatst bijgewerkt", nooitsync:"nog niet",
+ inloggen:"Inloggen", gebruikersnaam:"Gebruikersnaam", onbekendeinlog:"Onbekend wachtwoord", uitloggen:"Uitloggen", afdeling:"Afdeling", poedercoating:"Poedercoating", natlak:"Natlak", liter:"liter", literper:"liter per blik", aantalbussen:"Aantal blikken", literperbus:"Aantal liter per blik", bus:"blik", bussen:"blikken", perbus:"per blik", alleenkijken:"Alleen kijken", alleenkijkensub:"Je bent ingelogd als Kantoor. Je kunt alles bekijken, maar niets wijzigen.", ingelogdals:"Ingelogd als", liveverbonden:"Live verbonden", livelokaal:"Alleen op dit apparaat", synchroniseren:"Synchroniseren", syncadres:"Sync-adres", syncsleutel:"Sleutel (X-Master-Key)", syncuitleg:"Vul een adres in en alle apparaten delen dezelfde voorraad, met een verversing elke 5 seconden. Laat het leeg om alleen op dit apparaat te werken.", synctesten:"Verbinding testen", syncok:"Verbinding werkt", syncfout:"Verbinding mislukt", laatstsync:"Laatst bijgewerkt", nooitsync:"nog niet",
  coatings_nat:"verven", kiescoating_nat:"Kies een verf", nieuwecoating_nat:"Nieuwe verf", typecoating_nat:"Type verf", nogeencoating_nat:"Nog geen verf", nogeencoatingsub_nat:"Richt de camera op de barcode van de werkorder. Zodra hij herkend is verschijnt hier de verf om uit te boeken.", nieuwetoevoegen_nat:"Nieuwe verf toevoegen", bestaandecoating_nat:"Bestaande verf", coating_nat:"Verf", barcodehulp_nat:"Vul deze in, dan opent een scan van de werkorder later meteen deze verf.", stellingleeg_nat:"De verfkast is nog leeg", stellingleegsub_nat:"Voeg je eerste verf toe — aflak of primer, met merk, type, kleur en glansgraad, en boek meteen de eerste blikken in.", coatingtoevoegen_nat:"Verf toevoegen", scanopent_nat:"Scan je deze code op de werkorder, dan opent deze verf.", anderecoatings_nat:"andere verven; bij scannen kun je kiezen.", vraagwissen_nat:"Alle verven en mutaties definitief wissen?", vraagverwijder_nat:"Deze verf en zijn historie definitief verwijderen?", nietgekoppeld_nat:"Deze code is nog niet gekoppeld aan een verf.", nietgekoppeldsub_nat:"Uitboeken kan daarom niet. Voeg de verf eerst toe bij Inboeken; de code wordt dan meteen ingevuld.", poederverbruikt_nat:"Verf verbruikt", zoek_nat:"Zoek merk, type, RAL of glansgraad", vulmerk_nat:"Vul het merk in, bijvoorbeeld International", kiescoatingsub_nat:"Aflakken en primers staan links in eigen blokken. Tik op een regel voor de historie en de instellingen.", ligtnog_nat:"Er staat nog",
  handmatig:"Uit de lijst", scannen:"Scannen", kieswatje:"Kies wat je uitboekt",
  correctie:"Correctie",
@@ -940,6 +956,9 @@ nl:{
  barcodetypen:"Je mag hem ook met de hand invullen. Let goed op: één tikfout en de scanner vindt hem niet meer.", barcodedubbel:"Deze code hangt al aan {n} coating(s) — dat mag, dan kies je na het scannen.",
  mailgeachte:"Geachte,", mailopdracht:"Hierbij bestelopdracht met referentienummer :", mailfactuur:"Gelieve facturen per mail te verzenden naar : Crediteuren@straalbedrijfgeuze.nl",
  nietsgevonden:"Niets gevonden", toevoegen:"Toevoegen",
+ herstelpunten:"Herstelpunten", herstelpuntenuitleg:"Tijdens werktijd wordt er elk uur een kopie bewaard, en van elke dag één. Ging er iets mis, dan zet je hiermee een uur of een dag terug.", geenkopies:"Nog geen herstelpunten", kopieslaadt:"Even ophalen…", vernieuwen:"Lijst ophalen", terugzetten:"Terugzetten", kopievraag:"Alles terugzetten naar {d}? Er stonden toen {n} artikelen in. Wat er nu staat wordt vervangen — op alle apparaten.", kopieteruggezet:"Teruggezet naar", kopiemislukt:"Dat herstelpunt kon niet worden opgehaald", laatstekopie:"Laatste kopie", voorterugzetten:"vlak voor het terugzetten",
+ backuptijd:"Tijd voor een back-up", backuptijdsub:"Zet eens per week een kopie op de bedrijfsserver. Dat is de enige kopie die blijft bestaan als er iets met de database gebeurt.", nuopslaan:"Nu opslaan", backuplaatst:"Laatste back-up naar de pc", backupnooit:"nog nooit", uurkopie:"uurkopie",
+ wachtwoord:"Wachtwoord", toonwachtwoord:"Wachtwoord tonen", verbergwachtwoord:"Wachtwoord verbergen",
  barcodescannen:"Barcode scannen", scanstoppen:"Scannen stoppen", scanvoorbarcode:"Scan de barcode van de werkorder", barcodegescand:"Barcode overgenomen", nietgekoppeld:"Deze code is nog niet gekoppeld aan een coating.", nietgekoppeldsub:"Uitboeken kan daarom niet. Voeg de coating eerst toe bij Inboeken; de code wordt dan meteen ingevuld.", naarinboeken:"Toevoegen bij Inboeken",
  nuinhuis:"Nu in huis", kgperdoos:"kg per doos", kieseerst:"Kies eerst een hoeveelheid", vulkilo:"Vul het aantal kilo per doos in", vulmerk:"Vul het merk in, bijvoorbeeld Ganzlin", vulkleur:"Vul de kleur in, bijvoorbeeld RAL 7036", bestondal:"Bestond al — voorraad bijgeboekt", bestondalgekoppeld:"Bestond al — voorraad bijgeboekt en barcode gekoppeld", camerawerktniet:"Camera werkt niet?", bijgeboekt:"bijgeboekt", geboekt:"geboekt",
  kg:"kg", dozen:"dozen", doos:"doos"
@@ -1005,7 +1024,7 @@ en:{
  dezeuitvoering:"This version", versievan:"Version of",
  geenresultaat:"Nothing found. Adjust your search.",
  barcodeoptioneel:"Barcode from the work order (optional)", leeglatenprima:"Leaving it empty is fine. The app then uses its own code", kanniet39:"Cannot be read.", code39kent:"Code 39 does not support these characters:", toegestaan:"Allowed are digits, capital letters and", scanopent:"Scan this code on the work order and this coating opens.", ookop:"This code is also on", anderecoatings:"other coatings; you can choose when scanning.", cameranietbeschikbaar:"The camera is not available here.", cameranietbeschikbaarsub:"Browsers only release the camera over https. Use Take photo or type the code.", geentoegangcamera:"No access to the camera.", camtoestaan:"Allow the camera in your browser settings and reload the page.", geencamera:"No camera found on this device.", fout:"Error:", lampaan:"Light on", lampuit:"Light off", zoom:"Zoom", lampwerktniet:"The light does not work on this device", opslagwaarschuwing:"The data is stored in this browser on this device. It does not move to another device by itself and disappears if you clear your browser data. So make a backup regularly.", camerahelp:"Browsers only release the camera over https or localhost. So do not open this file by double-clicking; put it on a web address with https.", versieuitleg:"The app does not update itself. When you get a new version, put that file on the same web address. Then close the app completely on your phone and open it again. Make a backup first to be safe.", vraagwissen:"Permanently erase all coatings and movements?", vraagzeker:"Are you sure? Download a backup first if in doubt.", vraagverwijder:"Permanently delete this coating and its history?", vraagvervang:"The current data will be replaced by the backup. Continue?", vraagvoorbeeld:"Add sample data to what is already there?", ligtnog:"There is still", boekeerstuit:"Book everything out first.", backupgedownload:"Backup downloaded", backupingelezen:"Backup loaded", inlezenmislukt:"Loading failed:", geenbackup:"this is not a backup of this system", voorbeeldgeladen:"Sample data loaded", merkkleurverplicht:"Brand and colour are required", tekensniet39:"These characters do not fit in Code 39:", ingeboekt:"booked in",
- inloggen:"Log in", gebruikersnaam:"User name", onbekendeinlog:"Unknown user name", uitloggen:"Log out", afdeling:"Department", poedercoating:"Powder coating", natlak:"Wet paint", liter:"litre", literper:"litres per tin", aantalbussen:"Number of tins", literperbus:"Litres per tin", bus:"tin", bussen:"tins", perbus:"per tin", alleenkijken:"View only", alleenkijkensub:"You are logged in as Office. You can view everything but change nothing.", ingelogdals:"Logged in as", liveverbonden:"Live connected", livelokaal:"This device only", synchroniseren:"Synchronising", syncadres:"Sync address", syncsleutel:"Key (X-Master-Key)", syncuitleg:"Enter an address and all devices share the same stock, refreshed every 5 seconds. Leave it empty to work on this device only.", synctesten:"Test connection", syncok:"Connection works", syncfout:"Connection failed", laatstsync:"Last updated", nooitsync:"not yet",
+ inloggen:"Log in", gebruikersnaam:"User name", onbekendeinlog:"Unknown password", uitloggen:"Log out", afdeling:"Department", poedercoating:"Powder coating", natlak:"Wet paint", liter:"litre", literper:"litres per tin", aantalbussen:"Number of tins", literperbus:"Litres per tin", bus:"tin", bussen:"tins", perbus:"per tin", alleenkijken:"View only", alleenkijkensub:"You are logged in as Office. You can view everything but change nothing.", ingelogdals:"Logged in as", liveverbonden:"Live connected", livelokaal:"This device only", synchroniseren:"Synchronising", syncadres:"Sync address", syncsleutel:"Key (X-Master-Key)", syncuitleg:"Enter an address and all devices share the same stock, refreshed every 5 seconds. Leave it empty to work on this device only.", synctesten:"Test connection", syncok:"Connection works", syncfout:"Connection failed", laatstsync:"Last updated", nooitsync:"not yet",
  coatings_nat:"paints", kiescoating_nat:"Select a paint", nieuwecoating_nat:"New paint", typecoating_nat:"Paint type", nogeencoating_nat:"No paint yet", nogeencoatingsub_nat:"Point the camera at the barcode on the work order. Once it is recognised the paint appears here to book out.", nieuwetoevoegen_nat:"Add new paint", bestaandecoating_nat:"Existing paint", coating_nat:"Paint", barcodehulp_nat:"Fill this in and scanning the work order will open this paint straight away.", stellingleeg_nat:"The paint store is still empty", stellingleegsub_nat:"Add your first paint — topcoat or primer, with brand, type, colour and gloss level, and book in the first tins right away.", coatingtoevoegen_nat:"Add paint", scanopent_nat:"Scan this code on the work order and this paint opens.", anderecoatings_nat:"other paints; you can choose when scanning.", vraagwissen_nat:"Permanently erase all paints and movements?", vraagverwijder_nat:"Permanently delete this paint and its history?", nietgekoppeld_nat:"This code is not linked to a paint yet.", nietgekoppeldsub_nat:"So it cannot be booked out. Add the paint under Book in first; the code is filled in for you.", poederverbruikt_nat:"Paint used", zoek_nat:"Search brand, type, RAL or gloss", vulmerk_nat:"Enter the brand, for example International", kiescoatingsub_nat:"Topcoats and primers are listed separately on the left. Tap a row for the history and settings.", ligtnog_nat:"There is still",
  handmatig:"From the list", scannen:"Scan", kieswatje:"Choose what you book out",
  correctie:"Correction",
@@ -1044,6 +1063,9 @@ en:{
  barcodetypen:"You may also type it in. Be careful: one typo and the scanner will not find it.", barcodedubbel:"This code is already on {n} coating(s) — that is allowed, you pick after scanning.",
  mailgeachte:"Geachte,", mailopdracht:"Hierbij bestelopdracht met referentienummer :", mailfactuur:"Gelieve facturen per mail te verzenden naar : Crediteuren@straalbedrijfgeuze.nl",
  nietsgevonden:"Nothing found", toevoegen:"Add",
+ herstelpunten:"Restore points", herstelpuntenuitleg:"During working hours a copy is kept every hour, plus one per day. If something went wrong, you can go back an hour or a day here.", geenkopies:"No restore points yet", kopieslaadt:"Fetching…", vernieuwen:"Fetch list", terugzetten:"Restore", kopievraag:"Restore everything to {d}? It held {n} items then. What is there now will be replaced — on all devices.", kopieteruggezet:"Restored to", kopiemislukt:"That restore point could not be fetched", laatstekopie:"Last copy", voorterugzetten:"just before restoring",
+ backuptijd:"Time for a backup", backuptijdsub:"Put a copy on the company server once a week. That is the only copy that survives if something happens to the database.", nuopslaan:"Save now", backuplaatst:"Last backup to the pc", backupnooit:"never", uurkopie:"hourly copy",
+ wachtwoord:"Password", toonwachtwoord:"Show password", verbergwachtwoord:"Hide password",
  barcodescannen:"Scan barcode", scanstoppen:"Stop scanning", scanvoorbarcode:"Scan the barcode on the work order", barcodegescand:"Barcode captured", nietgekoppeld:"This code is not linked to a coating yet.", nietgekoppeldsub:"So it cannot be booked out. Add the coating under Book in first; the code is filled in for you.", naarinboeken:"Add under Book in",
  nuinhuis:"Now in stock", kgperdoos:"kg per box", kieseerst:"Pick an amount first", vulkilo:"Enter the kilos per box", vulmerk:"Enter the brand, for example Ganzlin", vulkleur:"Enter the colour, for example RAL 7036", bestondal:"Already existed — stock booked in", bestondalgekoppeld:"Already existed — stock booked in and barcode linked", camerawerktniet:"Camera not working?", bijgeboekt:"booked in", geboekt:"booked",
  kg:"kg", dozen:"boxes", doos:"box"
@@ -1109,7 +1131,7 @@ hu:{
  dezeuitvoering:"Ez a verzió", versievan:"Verzió:",
  geenresultaat:"Nincs találat. Módosítsa a keresést.",
  barcodeoptioneel:"A munkalap vonalkódja (nem kötelező)", leeglatenprima:"Üresen is hagyhatja. Ekkor az alkalmazás a saját kódját használja", kanniet39:"Nem olvasható.", code39kent:"A Code 39 nem ismeri ezeket a karaktereket:", toegestaan:"Megengedettek a számok, a nagybetűk és a", scanopent:"Ha beolvassa ezt a kódot a munkalapról, ez a bevonat nyílik meg.", ookop:"Ez a kód szerepel még", anderecoatings:"másik bevonaton; beolvasáskor választhat.", cameranietbeschikbaar:"A kamera itt nem érhető el.", cameranietbeschikbaarsub:"A böngészők csak https felett engedik a kamerát. Használja a Fénykép készítése gombot, vagy írja be a kódot.", geentoegangcamera:"Nincs hozzáférés a kamerához.", camtoestaan:"Engedélyezze a kamerát a böngésző beállításaiban, majd töltse be újra az oldalt.", geencamera:"Nem található kamera ezen az eszközön.", fout:"Hiba:", lampaan:"Lámpa be", lampuit:"Lámpa ki", zoom:"Nagyítás", lampwerktniet:"A lámpa nem működik ezen az eszközön", opslagwaarschuwing:"Az adatok ennek az eszköznek a böngészőjében tárolódnak. Nem kerülnek át maguktól másik készülékre, és eltűnnek, ha törli a böngészőadatokat. Készítsen ezért rendszeresen biztonsági mentést.", camerahelp:"A böngészők csak https vagy localhost felett engedik a kamerát. Ne dupla kattintással nyissa meg ezt a fájlt, hanem tegye fel egy https webcímre.", versieuitleg:"Az alkalmazás nem frissíti magát. Ha új verziót kap, tegye azt a fájlt ugyanarra a webcímre. Utána zárja be teljesen az alkalmazást a telefonján, és nyissa meg újra. A biztonság kedvéért előbb készítsen mentést.", vraagwissen:"Végleg törli az összes bevonatot és mozgást?", vraagzeker:"Biztos benne? Ha bizonytalan, előbb töltse le a mentést.", vraagverwijder:"Végleg törli ezt a bevonatot és az előzményeit?", vraagvervang:"A jelenlegi adatokat felülírja a mentés. Folytatja?", vraagvoorbeeld:"Hozzáadja a mintaadatokat a meglévőkhöz?", ligtnog:"Még van", boekeerstuit:"Előbb vételezze ki az egészet.", backupgedownload:"Mentés letöltve", backupingelezen:"Mentés betöltve", inlezenmislukt:"A betöltés nem sikerült:", geenbackup:"ez nem ennek a rendszernek a mentése", voorbeeldgeladen:"Mintaadatok betöltve", merkkleurverplicht:"A gyártó és a szín kötelező", tekensniet39:"Ezek a karakterek nem férnek bele a Code 39-be:", ingeboekt:"bevételezve",
- inloggen:"Bejelentkezés", gebruikersnaam:"Felhasználónév", onbekendeinlog:"Ismeretlen felhasználónév", uitloggen:"Kijelentkezés", afdeling:"Részleg", poedercoating:"Porszórás", natlak:"Nedves festés", liter:"liter", literper:"liter dobozonként", aantalbussen:"Dobozok száma", literperbus:"Liter dobozonként", bus:"doboz", bussen:"doboz", perbus:"dobozonként", alleenkijken:"Csak megtekintés", alleenkijkensub:"Irodaként van bejelentkezve. Mindent megnézhet, de semmit sem módosíthat.", ingelogdals:"Bejelentkezve:", liveverbonden:"Élő kapcsolat", livelokaal:"Csak ezen az eszközön", synchroniseren:"Szinkronizálás", syncadres:"Szinkron cím", syncsleutel:"Kulcs (X-Master-Key)", syncuitleg:"Adjon meg egy címet, és minden eszköz ugyanazt a készletet használja, 5 másodpercenként frissítve. Hagyja üresen, ha csak ezen az eszközön dolgozik.", synctesten:"Kapcsolat tesztelése", syncok:"A kapcsolat működik", syncfout:"A kapcsolat nem sikerült", laatstsync:"Utoljára frissítve", nooitsync:"még nem",
+ inloggen:"Bejelentkezés", gebruikersnaam:"Felhasználónév", onbekendeinlog:"Ismeretlen jelszó", uitloggen:"Kijelentkezés", afdeling:"Részleg", poedercoating:"Porszórás", natlak:"Nedves festés", liter:"liter", literper:"liter dobozonként", aantalbussen:"Dobozok száma", literperbus:"Liter dobozonként", bus:"doboz", bussen:"doboz", perbus:"dobozonként", alleenkijken:"Csak megtekintés", alleenkijkensub:"Irodaként van bejelentkezve. Mindent megnézhet, de semmit sem módosíthat.", ingelogdals:"Bejelentkezve:", liveverbonden:"Élő kapcsolat", livelokaal:"Csak ezen az eszközön", synchroniseren:"Szinkronizálás", syncadres:"Szinkron cím", syncsleutel:"Kulcs (X-Master-Key)", syncuitleg:"Adjon meg egy címet, és minden eszköz ugyanazt a készletet használja, 5 másodpercenként frissítve. Hagyja üresen, ha csak ezen az eszközön dolgozik.", synctesten:"Kapcsolat tesztelése", syncok:"A kapcsolat működik", syncfout:"A kapcsolat nem sikerült", laatstsync:"Utoljára frissítve", nooitsync:"még nem",
  coatings_nat:"festék", kiescoating_nat:"Válasszon festéket", nieuwecoating_nat:"Új festék", typecoating_nat:"Festék típusa", nogeencoating_nat:"Még nincs festék", nogeencoatingsub_nat:"Irányítsa a kamerát a munkalap vonalkódjára. Felismerés után itt jelenik meg a kivételezendő festék.", nieuwetoevoegen_nat:"Új festék hozzáadása", bestaandecoating_nat:"Meglévő festék", coating_nat:"Festék", barcodehulp_nat:"Ha kitölti, a munkalap beolvasása később rögtön ezt a festéket nyitja meg.", stellingleeg_nat:"A festékraktár még üres", stellingleegsub_nat:"Adja hozzá az első festéket — fedőlakk vagy alapozó, gyártóval, típussal, színnel és fényességgel, és vételezze be rögtön az első dobozokat.", coatingtoevoegen_nat:"Festék hozzáadása", scanopent_nat:"Ha beolvassa ezt a kódot a munkalapról, ez a festék nyílik meg.", anderecoatings_nat:"másik festéken; beolvasáskor választhat.", vraagwissen_nat:"Végleg törli az összes festéket és mozgást?", vraagverwijder_nat:"Végleg törli ezt a festéket és az előzményeit?", nietgekoppeld_nat:"Ez a kód még nincs festékhez kapcsolva.", nietgekoppeldsub_nat:"Ezért nem lehet kivételezni. Előbb adja hozzá a festéket a Bevételezés fülön; a kód automatikusan bekerül.", poederverbruikt_nat:"Felhasznált festék", zoek_nat:"Keresés: gyártó, típus, RAL vagy fényesség", vulmerk_nat:"Adja meg a gyártót, például International", kiescoatingsub_nat:"A fedőlakkok és alapozók külön blokkban vannak a bal oldalon. Koppintson egy sorra az előzményekért.", ligtnog_nat:"Még van",
  handmatig:"A listából", scannen:"Beolvasás", kieswatje:"Válassza ki, mit vételez ki",
  correctie:"Helyesbítés",
@@ -1148,6 +1170,9 @@ hu:{
  barcodetypen:"Kézzel is beírhatja. Vigyázzon: egy elgépelés és az olvasó nem találja meg.", barcodedubbel:"Ez a kód már {n} bevonathoz tartozik — ez megengedett, beolvasás után választ.",
  mailgeachte:"Geachte,", mailopdracht:"Hierbij bestelopdracht met referentienummer :", mailfactuur:"Gelieve facturen per mail te verzenden naar : Crediteuren@straalbedrijfgeuze.nl",
  nietsgevonden:"Nincs találat", toevoegen:"Hozzáadás",
+ herstelpunten:"Visszaállítási pontok", herstelpuntenuitleg:"Munkaidőben óránként készül másolat, és naponta egy. Ha valami elromlott, itt visszaléphet egy órát vagy egy napot.", geenkopies:"Még nincs visszaállítási pont", kopieslaadt:"Betöltés…", vernieuwen:"Lista lekérése", terugzetten:"Visszaállítás", kopievraag:"Mindent visszaállít erre: {d}? Akkor {n} cikk volt benne. A jelenlegi adatok felülíródnak — minden eszközön.", kopieteruggezet:"Visszaállítva erre:", kopiemislukt:"A visszaállítási pontot nem sikerült lekérni", laatstekopie:"Utolsó másolat", voorterugzetten:"közvetlenül a visszaállítás előtt",
+ backuptijd:"Ideje egy mentésnek", backuptijdsub:"Hetente egyszer tegyen egy másolatot a céges szerverre. Ez az egyetlen másolat, amely megmarad, ha az adatbázissal történik valami.", nuopslaan:"Mentés most", backuplaatst:"Utolsó mentés a gépre", backupnooit:"soha", uurkopie:"óránkénti másolat",
+ wachtwoord:"Jelszó", toonwachtwoord:"Jelszó megjelenítése", verbergwachtwoord:"Jelszó elrejtése",
  barcodescannen:"Vonalkód beolvasása", scanstoppen:"Beolvasás leállítása", scanvoorbarcode:"Olvassa be a munkalap vonalkódját", barcodegescand:"Vonalkód átvéve", nietgekoppeld:"Ez a kód még nincs bevonathoz kapcsolva.", nietgekoppeldsub:"Ezért nem lehet kivételezni. Előbb adja hozzá a bevonatot a Bevételezés fülön; a kód automatikusan bekerül.", naarinboeken:"Hozzáadás a Bevételezésnél",
  nuinhuis:"Jelenlegi készlet", kgperdoos:"kg dobozonként", kieseerst:"Előbb válasszon mennyiséget", vulkilo:"Adja meg a kilogrammot dobozonként", vulmerk:"Adja meg a gyártót, például Ganzlin", vulkleur:"Adja meg a színt, például RAL 7036", bestondal:"Már létezett — készlet bevételezve", bestondalgekoppeld:"Már létezett — készlet bevételezve és vonalkód hozzákapcsolva", camerawerktniet:"Nem működik a kamera?", bijgeboekt:"bevételezve", geboekt:"könyvelve",
  kg:"kg", dozen:"doboz", doos:"doboz"
@@ -1213,7 +1238,7 @@ ro:{
  dezeuitvoering:"Această versiune", versievan:"Versiunea din",
  geenresultaat:"Nu s-a găsit nimic. Modifică termenul de căutare.",
  barcodeoptioneel:"Codul de bare de pe comandă (opțional)", leeglatenprima:"Îl poți lăsa gol. Atunci aplicația folosește propriul cod", kanniet39:"Nu poate fi citit.", code39kent:"Code 39 nu cunoaște aceste caractere:", toegestaan:"Sunt permise cifre, majuscule și", scanopent:"Dacă scanezi acest cod de pe comandă, se deschide această vopsea.", ookop:"Acest cod este și pe", anderecoatings:"alte vopsele; poți alege la scanare.", cameranietbeschikbaar:"Camera nu este disponibilă aici.", cameranietbeschikbaarsub:"Browserele permit camera doar prin https. Folosește Fă o fotografie sau scrie codul.", geentoegangcamera:"Fără acces la cameră.", camtoestaan:"Permite camera în setările browserului și reîncarcă pagina.", geencamera:"Nu s-a găsit nicio cameră pe acest dispozitiv.", fout:"Eroare:", lampaan:"Lanternă pornită", lampuit:"Lanternă oprită", zoom:"Zoom", lampwerktniet:"Lanterna nu funcționează pe acest dispozitiv", opslagwaarschuwing:"Datele sunt salvate în acest browser, pe acest dispozitiv. Nu trec singure pe alt aparat și dispar dacă ștergi datele browserului. Fă deci copii de siguranță regulat.", camerahelp:"Browserele permit camera doar prin https sau localhost. Nu deschide fișierul cu dublu clic; pune-l pe o adresă web cu https.", versieuitleg:"Aplicația nu se actualizează singură. Când primești o versiune nouă, pune acel fișier pe aceeași adresă web. Apoi închide complet aplicația pe telefon și deschide-o din nou. Fă mai întâi o copie de siguranță.", vraagwissen:"Ștergi definitiv toate vopselele și mișcările?", vraagzeker:"Sigur? Descarcă mai întâi o copie dacă ai dubii.", vraagverwijder:"Ștergi definitiv această vopsea și istoricul ei?", vraagvervang:"Datele actuale vor fi înlocuite de copia de siguranță. Continui?", vraagvoorbeeld:"Adaugi datele de probă la ce există deja?", ligtnog:"Mai sunt", boekeerstuit:"Scade mai întâi tot.", backupgedownload:"Copie descărcată", backupingelezen:"Copie încărcată", inlezenmislukt:"Încărcarea a eșuat:", geenbackup:"aceasta nu este o copie a acestui sistem", voorbeeldgeladen:"Date de probă încărcate", merkkleurverplicht:"Marca și culoarea sunt obligatorii", tekensniet39:"Aceste caractere nu încap în Code 39:", ingeboekt:"recepționat",
- inloggen:"Autentificare", gebruikersnaam:"Nume utilizator", onbekendeinlog:"Nume de utilizator necunoscut", uitloggen:"Deconectare", afdeling:"Departament", poedercoating:"Vopsire în câmp electrostatic", natlak:"Vopsire umedă", liter:"litru", literper:"litri per doză", aantalbussen:"Număr de doze", literperbus:"Litri per doză", bus:"doză", bussen:"doze", perbus:"per doză", alleenkijken:"Doar vizualizare", alleenkijkensub:"Ești autentificat ca Birou. Poți vedea tot, dar nu poți modifica nimic.", ingelogdals:"Autentificat ca", liveverbonden:"Conectat live", livelokaal:"Doar pe acest dispozitiv", synchroniseren:"Sincronizare", syncadres:"Adresă de sincronizare", syncsleutel:"Cheie (X-Master-Key)", syncuitleg:"Introdu o adresă și toate dispozitivele folosesc același stoc, reîmprospătat la fiecare 5 secunde. Lasă gol pentru a lucra doar pe acest dispozitiv.", synctesten:"Testează conexiunea", syncok:"Conexiunea funcționează", syncfout:"Conexiunea a eșuat", laatstsync:"Ultima actualizare", nooitsync:"încă nu",
+ inloggen:"Autentificare", gebruikersnaam:"Nume utilizator", onbekendeinlog:"Parolă necunoscută", uitloggen:"Deconectare", afdeling:"Departament", poedercoating:"Vopsire în câmp electrostatic", natlak:"Vopsire umedă", liter:"litru", literper:"litri per doză", aantalbussen:"Număr de doze", literperbus:"Litri per doză", bus:"doză", bussen:"doze", perbus:"per doză", alleenkijken:"Doar vizualizare", alleenkijkensub:"Ești autentificat ca Birou. Poți vedea tot, dar nu poți modifica nimic.", ingelogdals:"Autentificat ca", liveverbonden:"Conectat live", livelokaal:"Doar pe acest dispozitiv", synchroniseren:"Sincronizare", syncadres:"Adresă de sincronizare", syncsleutel:"Cheie (X-Master-Key)", syncuitleg:"Introdu o adresă și toate dispozitivele folosesc același stoc, reîmprospătat la fiecare 5 secunde. Lasă gol pentru a lucra doar pe acest dispozitiv.", synctesten:"Testează conexiunea", syncok:"Conexiunea funcționează", syncfout:"Conexiunea a eșuat", laatstsync:"Ultima actualizare", nooitsync:"încă nu",
  coatings_nat:"vopsele", kiescoating_nat:"Alege o vopsea", nieuwecoating_nat:"Vopsea nouă", typecoating_nat:"Tipul vopselei", nogeencoating_nat:"Încă nicio vopsea", nogeencoatingsub_nat:"Îndreaptă camera spre codul de bare de pe comandă. După recunoaștere apare aici vopseaua de scăzut.", nieuwetoevoegen_nat:"Adaugă o vopsea nouă", bestaandecoating_nat:"Vopsea existentă", coating_nat:"Vopsea", barcodehulp_nat:"Completează-l și scanarea comenzii va deschide direct această vopsea.", stellingleeg_nat:"Depozitul de vopsea este încă gol", stellingleegsub_nat:"Adaugă prima vopsea — strat final sau grund, cu marcă, tip, culoare și grad de luciu, și recepționează imediat primele doze.", coatingtoevoegen_nat:"Adaugă vopsea", scanopent_nat:"Dacă scanezi acest cod de pe comandă, se deschide această vopsea.", anderecoatings_nat:"alte vopsele; poți alege la scanare.", vraagwissen_nat:"Ștergi definitiv toate vopselele și mișcările?", vraagverwijder_nat:"Ștergi definitiv această vopsea și istoricul ei?", nietgekoppeld_nat:"Acest cod nu este încă legat de o vopsea.", nietgekoppeldsub_nat:"De aceea nu se poate scădea. Adaugă mai întâi vopseaua la Recepție; codul se completează automat.", poederverbruikt_nat:"Vopsea consumată", zoek_nat:"Caută marcă, tip, RAL sau luciu", vulmerk_nat:"Introdu marca, de exemplu International", kiescoatingsub_nat:"Straturile finale și grundurile sunt în blocuri separate în stânga.", ligtnog_nat:"Mai sunt",
  handmatig:"Din listă", scannen:"Scanare", kieswatje:"Alege ce scazi",
  correctie:"Corecție",
@@ -1252,6 +1277,9 @@ ro:{
  barcodetypen:"Îl poți introduce și manual. Atenție: o greșeală și scanerul nu îl mai găsește.", barcodedubbel:"Acest cod aparține deja la {n} vopsea/vopsele — este permis, alegi după scanare.",
  mailgeachte:"Geachte,", mailopdracht:"Hierbij bestelopdracht met referentienummer :", mailfactuur:"Gelieve facturen per mail te verzenden naar : Crediteuren@straalbedrijfgeuze.nl",
  nietsgevonden:"Nimic găsit", toevoegen:"Adaugă",
+ herstelpunten:"Puncte de restaurare", herstelpuntenuitleg:"În timpul programului se păstrează o copie în fiecare oră și una pe zi. Dacă ceva a mers prost, poți reveni cu o oră sau o zi.", geenkopies:"Încă niciun punct de restaurare", kopieslaadt:"Se încarcă…", vernieuwen:"Preia lista", terugzetten:"Restaurează", kopievraag:"Restaurezi totul la {d}? Atunci erau {n} articole. Ce este acum va fi înlocuit — pe toate dispozitivele.", kopieteruggezet:"Restaurat la", kopiemislukt:"Punctul de restaurare nu a putut fi preluat", laatstekopie:"Ultima copie", voorterugzetten:"chiar înainte de restaurare",
+ backuptijd:"E timpul pentru o copie", backuptijdsub:"Pune o copie pe serverul firmei o dată pe săptămână. Este singura copie care rămâne dacă se întâmplă ceva cu baza de date.", nuopslaan:"Salvează acum", backuplaatst:"Ultima copie pe pc", backupnooit:"niciodată", uurkopie:"copie orară",
+ wachtwoord:"Parolă", toonwachtwoord:"Arată parola", verbergwachtwoord:"Ascunde parola",
  barcodescannen:"Scanează codul", scanstoppen:"Oprește scanarea", scanvoorbarcode:"Scanează codul de bare de pe comandă", barcodegescand:"Cod de bare preluat", nietgekoppeld:"Acest cod nu este încă legat de o vopsea.", nietgekoppeldsub:"De aceea nu se poate scădea. Adaugă mai întâi vopseaua la Recepție; codul se completează automat.", naarinboeken:"Adaugă la Recepție",
  nuinhuis:"Acum în stoc", kgperdoos:"kg per cutie", kieseerst:"Alege mai întâi o cantitate", vulkilo:"Introdu kilogramele per cutie", vulmerk:"Introdu marca, de exemplu Ganzlin", vulkleur:"Introdu culoarea, de exemplu RAL 7036", bestondal:"Exista deja — stoc recepționat", bestondalgekoppeld:"Exista deja — stoc recepționat și cod de bare legat", camerawerktniet:"Camera nu funcționează?", bijgeboekt:"recepționat", geboekt:"înregistrat",
  kg:"kg", dozen:"cutii", doos:"cutie"
@@ -1571,7 +1599,7 @@ const kgTekst=(g,a)=>gramNaarKg(g)+" "+(a?artEenheid(a,g):eenheidBij(g));
    localStorage. Dan werkt de app gewoon door, alleen zonder bewaren.
    ============================================================ */
 const SLEUTEL="geuzevoorraad_v2";
-const VERSIE="2026-08-21 · v80";
+const VERSIE="2026-09-03 · v88";
 
 /* ============================================================
    AFDELINGEN — poedercoating en natlak hebben elk een eigen voorraad
@@ -1670,7 +1698,42 @@ let bestand=laden();
 let db=null;                       // wordt gezet zodra de afdeling bekend is
 let migratieFout="";
 
+/* Waar je in elke lijst stond, per scherm bewaard. Buiten het scherm om,
+   want op de telefoon verdwijnt de lijst als je een artikel opent. */
+let scrollPlek={};
+function vergeetScrollPlek(){
+  scrollPlek={};
+  try{ window.scrollTo(0,0); }catch(e){}
+}
+/** Elk vak dat op dit moment kan scrollen, met een naam die niet verschuift
+ *  als er elders een paneel bij komt. */
+function scrollVakken(){
+  const alles=[...document.querySelectorAll(".paneelbody,.paneel.scroll,.detailpaneel,.zijbalk")]
+    .filter(el=>{
+      const s=getComputedStyle(el);
+      return (s.overflowY==="auto"||s.overflowY==="scroll")&&el.scrollHeight>el.clientHeight+20;
+    });
+  const geteld={};
+  return alles.map(el=>{
+    const soort=(el.className||"vak").split(" ").sort().join("-");
+    geteld[soort]=(geteld[soort]||0)+1;
+    return {el,naam:soort+"#"+geteld[soort]};
+  });
+}
+/** Met een open detail hoort een eigen plek: anders overschrijft het
+ *  inklappen van de pagina wat je in de lijst had staan. */
+const scrollSleutel=()=>staat.scherm+(document.body.classList.contains("detail-open")?":d":":l");
+let paginaVolgt=false;
+function volgPagina(){
+  if(paginaVolgt) return;
+  paginaVolgt=true;
+  window.addEventListener("scroll",()=>{
+    if(gebruiker&&staat.scherm) scrollPlek[staat.scherm+"|pagina"]=window.scrollY;
+  },{passive:true});
+}
+
 function kiesAfdeling(sleutel){
+  vergeetScrollPlek();
   staat.uitScan=false; staat.scanBarcode=false; staat.scanDoel="";
   if(!bestand.afdelingen[sleutel]) bestand.afdelingen[sleutel]=legeAfdeling();
   staat.afdeling=sleutel;
@@ -1867,8 +1930,8 @@ const historie=id=>db.mutaties.filter(m=>m.artikelId===id)
 const staat={scherm:"voorraad",artikelId:null,boekId:null,zoek:"",
   richting:"uit",nieuwArtikel:true,nieuweSoort:"topcoat",herinnering:null,onbekendeCode:"",keuzeCode:"",keuzeZoek:"",voorstelBarcode:"",boekModus:"",
   boekModus:"uit",scanBarcode:false,nieuwForm:{},inboekZoek:"",inboekArtikelId:null,
-  lijstWeg:false,bestelLev:null,
-  bevestig:null,
+  lijstWeg:false,backupWeg:false,bestelLev:null,
+  bevestig:null,kopies:null,kopiesBezig:false,toonWw:false,
   vraagId:null,vraagNieuw:false,vraagBewerk:false,berichtTab:"vragen",vraagForm:null,
   scanDoel:"",scanArtikelId:null,artikelForm:{},
   uitScan:false,uitZoek:""};
@@ -1929,19 +1992,40 @@ function teken(){
         .filter(e=>e.id&&e.type!=="file").map(e=>({id:e.id,waarde:e.value}))
     : [];
 
-  // Onthoud waar je in een lange lijst stond; anders spring je bij elke tik
-  // weer naar boven.
-  const rollen=[".lijstpaneel .paneelbody",".detailpaneel",".paneel.scroll",
-                ".paneelbody.strak",".zijbalk"];
-  const stand={};
-  rollen.forEach(s=>{ const e=document.querySelector(s); if(e) stand[s]=e.scrollTop; });
+  // Onthoud waar je in een lange lijst stond. Dat bewaren we buiten het
+  // scherm om, want op de telefoon verdwijnt de lijst zodra je een artikel
+  // opent — en dan is de plek anders weg.
+  // Alle vakken die kunnen scrollen opzoeken in plaats van ze bij naam te
+  // noemen: elk scherm gebruikt weer een ander vak. Op de telefoon scrollt
+  // de pagina zelf.
+  const vorigeSleutel=scrollSleutel();
+  scrollVakken().forEach(v=>{
+    if(v.el.scrollTop>0) scrollPlek[vorigeSleutel+"|"+v.naam]=v.el.scrollTop;
+  });
+  if(window.scrollY>0) scrollPlek[vorigeSleutel+"|pagina"]=window.scrollY;
 
   const uit=tekenScherm();
   zetLogos();
-  rollen.forEach(s=>{
-    const e=document.querySelector(s);
-    if(e&&stand[s]) e.scrollTop=stand[s];
-  });
+  const zetTerug=()=>{
+    const sleutel=scrollSleutel();
+    scrollVakken().forEach(v=>{
+      const y=scrollPlek[sleutel+"|"+v.naam];
+      if(y&&v.el.scrollTop!==y) v.el.scrollTop=y;
+      if(!v.el.dataset.volgt){
+        v.el.dataset.volgt="1";
+        v.el.addEventListener("scroll",()=>{
+          scrollPlek[scrollSleutel()+"|"+v.naam]=v.el.scrollTop;
+        },{passive:true});
+      }
+    });
+    const py=scrollPlek[sleutel+"|pagina"];
+    if(py&&Math.abs(window.scrollY-py)>4) window.scrollTo(0,py);
+  };
+  zetTerug();
+  // De lijst is soms nog aan het opbouwen; daarna nog een paar keer proberen.
+  requestAnimationFrame(zetTerug);
+  setTimeout(zetTerug,60);
+  setTimeout(zetTerug,180);
 
   alles.forEach(v=>{
     const veld=document.getElementById(v.id);
@@ -2009,6 +2093,15 @@ function tekenScherm(){
           n?` <span class="telbol">${n}</span>`:""}</button>`;}).join("")}</div>`;})()
       :`<span class="afdnaam">${t(staat.afdeling==="poeder"?"poedercoating":staat.afdeling==="natlak"?"natlak":"magazijn")}</span>`)+
     `<button class="knop s rand" onclick="app.logUit()">${esc(gebruiker.naam)} · ${t("uitloggen")}</button>`;
+  const bw=document.getElementById("backupwaarschuwing");
+  if(bw){
+    bw.innerHTML=(backupNodig()&&!staat.backupWeg)?`<div class="melding info syncbalk">
+        <div style="min-width:0"><b>${t("backuptijd")}</b><br>
+          <span class="klein">${t("backuptijdsub")}</span></div>
+        <button class="knop s rand" onclick="app.verbergBackupBalk()">${t("later")}</button>
+        <button class="knop s lime" onclick="app.exporteer()">${t("nuopslaan")}</button>
+      </div>`:"";
+  }
   const vw=document.getElementById("versiewaarschuwing");
   if(vw){
     const nieuwer=nieuwereVersie();
@@ -2026,24 +2119,6 @@ function tekenScherm(){
         <button class="knop s lime" onclick="app.laadOpnieuw()">${t("bijwerken")}</button>
       </div>`:"";
     }
-  }
-  const lu=document.getElementById("lijstuitnodiging");
-  if(lu){
-    const mag=isMagazijn()&&magBoeken()&&!bestand.instellingen.lijstGeladen
-      &&!staat.lijstWeg&&db.artikelen.length<MAGAZIJNLIJST.split("~").length;
-    const poe=staat.afdeling==="poeder"&&magBoeken()&&!bestand.instellingen.poederGeladen
-      &&!staat.lijstWeg&&db.artikelen.length<POEDERLIJST.split("~").length;
-    lu.innerHTML=mag?`<div class="melding info syncbalk">
-        <div style="min-width:0"><b>${t("lijstklaarstaat")}</b><br>
-          <span class="klein">${t("lijstklaarsub")}</span></div>
-        <button class="knop s rand" onclick="app.verbergLijstUitnodiging()">${t("later")}</button>
-        <button class="knop s lime" onclick="app.laadMagazijnlijst()">${t("lijstinladen")}</button>
-      </div>`:(poe?`<div class="melding info syncbalk">
-        <div style="min-width:0"><b>${t("poederklaarstaat")}</b><br>
-          <span class="klein">${t("poederklaarsub")}</span></div>
-        <button class="knop s rand" onclick="app.verbergLijstUitnodiging()">${t("later")}</button>
-        <button class="knop s lime" onclick="app.laadPoederlijst()">${t("poederlijstinladen")}</button>
-      </div>`:"");
   }
   werkSyncLampjeBij();
 
@@ -2971,13 +3046,31 @@ function schermInloggen(){
     <img data-logo="1" alt="" class="inloglogo">
     <h1>GeuzeVoorraad</h1>
     <p class="zacht klein">${esc(t("inloggen"))}</p>
-    <label class="veld" style="margin-top:18px"><span>${t("gebruikersnaam")}</span>
-      <input id="inlogNaam" autocapitalize="none" autocomplete="username"
-             onkeydown="if(event.key==='Enter')app.logIn()"></label>
+    <label class="veld" style="margin-top:18px"><span>${t("wachtwoord")}</span>
+      <div class="wwvak">
+        <input id="inlogNaam" type="${staat.toonWw?"text":"password"}" autocapitalize="none"
+               autocorrect="off" spellcheck="false" autocomplete="current-password"
+               onkeydown="if(event.key===\'Enter\')app.logIn()">
+        <button type="button" class="wwoog" onclick="app.wisselWachtwoord()"
+                aria-label="${staat.toonWw?t("verbergwachtwoord"):t("toonwachtwoord")}"
+                title="${staat.toonWw?t("verbergwachtwoord"):t("toonwachtwoord")}">
+          ${ico(staat.toonWw?"oogdicht":"oog")}
+        </button>
+      </div></label>
     <div id="inlogFout"></div>
     <button class="knop lime breed" onclick="app.logIn()">${t("inloggen")}</button>
   </div>`;
 }
+/** Het wachtwoord even zichtbaar maken, bijvoorbeeld bij een tikfout. */
+function wisselWachtwoord(){
+  const e=document.getElementById("inlogNaam");
+  const waarde=e?e.value:"";
+  staat.toonWw=!staat.toonWw;
+  teken();
+  const n=document.getElementById("inlogNaam");
+  if(n){ n.value=waarde; n.focus(); n.setSelectionRange(waarde.length,waarde.length); }
+}
+
 function logIn(){
   bekendeMeldingen=null;
   const veld=document.getElementById("inlogNaam");
@@ -2995,12 +3088,15 @@ function logIn(){
   laadGelezen(); laadBestelGezien();
   staat.scherm="voorraad"; staat.artikelId=null;
   startSync();
+  volgPagina();
   teken();
   controleerMeldingen();
   kijkNaarUpdate();
   setInterval(kijkNaarUpdate,1800000);
+  setInterval(maakDagKopie,600000);
 }
 function logUit(){
+  staat.toonWw=false;
   gebruiker=null;
   try{ sessionStorage.removeItem("geuze_gebruiker"); }catch(e){}
   stopCamera(); stopSync();
@@ -3378,7 +3474,7 @@ function startStroom(){
       syncStand.ok=true; syncStand.laatst=Date.now(); laatsteStroom=Date.now();
       werkSyncLampjeBij();
       clearTimeout(aanmelden);
-      aanmelden=setTimeout(()=>{ meldEigenVersie(); schrijfFirebase(); },1500);
+      aanmelden=setTimeout(()=>{ meldEigenVersie(); schrijfFirebase(); maakDagKopie(); },1500);
     };
     stroom.onerror=()=>{
       syncStand.ok=false; syncStand.fout="stream"; werkSyncLampjeBij();
@@ -3449,6 +3545,138 @@ async function schrijfFirebase(){
   syncBezig=false;
   werkSyncLampjeBij();
 }
+
+/* ============================================================
+   HERSTELPUNTEN — elke dag wordt er automatisch een kopie van alle
+   gegevens weggeschreven, náást de gewone gegevens in de database.
+   Gaat er iets mis, dan zet je met één tik een dag terug.
+   ============================================================ */
+const backupBasis=()=>firebaseBasis()?firebaseBasis()+"_herstelpunten":"";
+const BEWAARDAGEN_KOPIE=30;   // dagkopieën
+const BEWAARUREN_KOPIE=24;    // uurkopieën
+const UURKOPIE_VAN=6, UURKOPIE_TOT=19;   // 's nachts verandert er niets
+
+const tweeCijfers=n=>String(n).padStart(2,"0");
+const dagSleutel=(d)=>{
+  d=d||new Date();
+  return d.getFullYear()+"-"+tweeCijfers(d.getMonth()+1)+"-"+tweeCijfers(d.getDate());
+};
+const uurSleutel=(d)=>{
+  d=d||new Date();
+  return "u"+dagSleutel(d)+"-"+tweeCijfers(d.getHours());
+};
+
+/** Hoeveel artikelen staan er in totaal? Nul betekent: niets te bewaren. */
+const telAlleArtikelen=()=>Object.keys(bestand.afdelingen)
+  .reduce((n,s)=>n+((bestand.afdelingen[s].artikelen||[]).length),0);
+
+function kopiePak(){
+  return {gemaakt:new Date().toISOString(),door:gebruiker?gebruiker.naam:"",
+    artikelen:telAlleArtikelen(),afdelingen:bestand.afdelingen,beheer:bestand.beheer};
+}
+
+/** Schrijft een kopie weg onder een sleutel, en ruimt de reeks op. */
+async function schrijfKopie(sleutel,voorvoegsel,houd){
+  const basis=backupBasis();
+  if(!basis) return false;
+  try{
+    await fetch(basis+"/"+sleutel+".json",{method:"PUT",
+      headers:{"Content-Type":"application/json"},body:JSON.stringify(kopiePak())});
+    const r=await fetch(basis+".json?shallow=true",{cache:"no-store"});
+    if(r.ok){
+      const alles=Object.keys(await r.json()||{});
+      const reeks=alles.filter(k=>voorvoegsel?k.indexOf(voorvoegsel)===0:/^\d{4}-/.test(k)).sort();
+      if(reeks.length>houd){
+        const weg={};
+        reeks.slice(0,reeks.length-houd).forEach(k=>{ weg[k]=null; });
+        await fetch(basis+".json",{method:"PATCH",
+          headers:{"Content-Type":"application/json"},body:JSON.stringify(weg)});
+      }
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+/** Elke dag één kopie, en tijdens werktijd elk uur één. Het eerste apparaat
+ *  dat aan de beurt is doet het; de rest ziet dat en slaat het over. */
+async function maakDagKopie(){
+  if(!firebaseAan()||!syncActief()||!backupBasis()) return;
+  if(!telAlleArtikelen()) return;   // nooit een lege stand bewaren
+  const bh=beheerDeel();
+  const nu=new Date();
+  const dag=dagSleutel(nu), uur=uurSleutel(nu);
+
+  if(bh.kopieDag!==dag){
+    bh.kopieDag=dag; bh.gewijzigd=Date.now(); opslaan();
+    await schrijfKopie(dag,"",BEWAARDAGEN_KOPIE);
+  }
+  const h=nu.getHours();
+  if(h>=UURKOPIE_VAN&&h<=UURKOPIE_TOT&&bh.kopieUur!==uur){
+    bh.kopieUur=uur; bh.gewijzigd=Date.now(); opslaan();
+    await schrijfKopie(uur,"u",BEWAARUREN_KOPIE);
+  }
+}
+
+/** Welke herstelpunten staan er klaar? */
+async function haalKopieLijst(){
+  staat.kopiesBezig=true; teken();
+  const basis=backupBasis();
+  let lijst=[];
+  try{
+    const r=await fetch(basis+".json?shallow=true",{cache:"no-store"});
+    if(r.ok){
+      const alles=Object.keys(await r.json()||{});
+      const uren=alles.filter(k=>k.charAt(0)==="u").sort().reverse();
+      const dagen=alles.filter(k=>/^\d{4}-/.test(k)).sort().reverse();
+      const rest=alles.filter(k=>uren.indexOf(k)<0&&dagen.indexOf(k)<0);
+      lijst=rest.concat(uren,dagen);
+    }
+  }catch(e){}
+  staat.kopies=lijst; staat.kopiesBezig=false;
+  teken();
+}
+/** Zet een dag terug. Alles wat er nu staat wordt vervangen door die kopie. */
+async function zetKopieTerug(dag){
+  if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
+  const basis=backupBasis();
+  let pak=null;
+  try{
+    const r=await fetch(basis+"/"+dag+".json",{cache:"no-store"});
+    if(r.ok) pak=await r.json();
+  }catch(e){}
+  if(!pak||!pak.afdelingen) return toast(t("kopiemislukt"));
+  vraagBevestiging(t("kopievraag").replace("{d}",datumNl(dag))
+      .replace("{n}",pak.artikelen||0),t("terugzetten"),async()=>{
+    // Eerst een kopie van hoe het nú is, voor het geval dit ook niet klopt.
+    try{
+      await fetch(basis+"/voor-terugzetten.json",{method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({gemaakt:new Date().toISOString(),door:gebruiker.naam,
+          artikelen:Object.keys(bestand.afdelingen).reduce((n,s)=>n+(bestand.afdelingen[s].artikelen||[]).length,0),
+          afdelingen:bestand.afdelingen,beheer:bestand.beheer})});
+    }catch(e){}
+    bestand.afdelingen=JSON.parse(JSON.stringify(pak.afdelingen));
+    if(pak.beheer) bestand.beheer=Object.assign({},pak.beheer,{kopieDag:beheerDeel().kopieDag});
+    migreer();
+    kiesAfdeling(staat.afdeling);
+    opslaan();
+    await schrijfFirebase();
+    toast(t("kopieteruggezet")+" "+datumNl(dag));
+    ga("voorraad",{artikelId:null});
+  },true);
+}
+const datumNl=d=>{
+  const s=String(d||"");
+  if(s.charAt(0)==="u"){
+    const p=s.slice(1).split("-");
+    if(p.length===4) return datumNl(p[0]+"-"+p[1]+"-"+p[2])+", "+p[3]+":00";
+  }
+  const p=s.split("-");
+  if(p.length!==3) return String(d||"");
+  const m=["januari","februari","maart","april","mei","juni","juli","augustus",
+           "september","oktober","november","december"];
+  return Number(p[2])+" "+(m[Number(p[1])-1]||p[1])+" "+p[0];
+};
 
 function startSync(){
   stopSync();
@@ -3783,9 +4011,18 @@ function regelHistorie(m){
 }
 
 function zoekIn(w){
+  const anders=staat.zoek!==w;
   staat.zoek=w;
   const doel=document.getElementById("lijstrijen");
   if(doel) doel.innerHTML=groepen().map(blokVan).join("");
+  // Bij een nieuwe zoekopdracht hoor je weer bovenaan te beginnen.
+  if(anders){
+    Object.keys(scrollPlek).forEach(k=>{
+      if(k.indexOf(staat.scherm+":")===0) delete scrollPlek[k];
+    });
+    scrollVakken().forEach(v=>{ v.el.scrollTop=0; });
+    try{ window.scrollTo(0,0); }catch(e){}
+  }
 }
 function kiesArtikel(id){
   staat.artikelForm={}; staat.scanDoel=""; staat.artikelId=id; teken(); }
@@ -3903,14 +4140,7 @@ function startScherm(){
       <img data-logo="1" alt="" style="width:54px;height:54px;object-fit:contain;margin-bottom:18px">
       <h2 style="font-size:1.3rem;font-weight:700;margin-bottom:8px">${isMagazijn()?t("magazijnleeg"):t("stellingleeg")}</h2>
       <p class="zacht" style="margin-bottom:22px">${isMagazijn()?t("magazijnleegsub"):t("stellingleegsub")}</p>
-      ${isMagazijn()?`<button class="knop lime breed nietBoeken" style="margin-bottom:16px"
-        onclick="app.laadMagazijnlijst()">${t("lijstinladen")}</button>`:""}
-      ${staat.afdeling==="poeder"?`<button class="knop lime breed nietBoeken" style="margin-bottom:16px"
-        onclick="app.laadPoederlijst()">${t("poederlijstinladen")}</button>`:""}
-      <div class="knoprij gelijk">
-        <button class="knop ${isMagazijn()?"rand":"lime"}" onclick="app.ga('inboeken')">${isMagazijn()?t("artikeltoevoegen"):t("coatingtoevoegen")}</button>
-        <button class="knop rand nietBoeken" onclick="app.vulVoorbeeld()">${t("voorbeelddata")}</button>
-      </div>
+      <button class="knop lime breed" onclick="app.ga('inboeken')">${isMagazijn()?t("artikeltoevoegen"):t("coatingtoevoegen")}</button>
     </div></section></div>`;
 }
 
@@ -4825,21 +5055,24 @@ function schermInstellingen(){
         <h4 class="opschrift" style="margin-bottom:8px">${t("camerawerktniet")}</h4>
         <p class="zacht klein" style="margin-bottom:22px">${t("camerahelp")}</p>
 
-        ${isMagazijn()?`<h4 class="opschrift" style="margin-bottom:8px">${t("lijstinladen")}</h4>
-        <div class="melding info">${t("lijstuitleg")}</div>
-        <button class="knop lime breed nietBoeken" style="margin-bottom:22px"
-          onclick="app.laadMagazijnlijst()">${t("lijstinladen")}</button>`:""}
-        ${staat.afdeling==="poeder"?`<h4 class="opschrift" style="margin-bottom:8px">${t("poederlijstinladen")}</h4>
-        <div class="melding info">${t("poederuitleg")}</div>
-        <button class="knop lime breed nietBoeken" style="margin-bottom:22px"
-          onclick="app.laadPoederlijst()">${t("poederlijstinladen")}</button>`:""}
-        <h4 class="opschrift" style="margin-bottom:10px">${t("opnieuwbeginnen")}</h4>
-        <div class="knoprij gelijk">
-          <button class="knop rand nietBoeken" onclick="app.vulVoorbeeld()">${t("voorbeelddata")}</button>
-          <button class="knop rood nietBoeken" onclick="app.wisAlles()">${t("alleswissen")}</button>
-        </div>
 
         ${gebruiker.rol==="admin"?`
+        <h4 class="opschrift" style="margin-bottom:8px">${t("herstelpunten")}</h4>
+        <div class="melding info">${t("herstelpuntenuitleg")}</div>
+        ${beheerDeel().kopieDag?`<p class="klein flauw" style="margin-bottom:4px">${t("laatstekopie")}: ${esc(datumNl(beheerDeel().kopieDag))}</p>`:""}
+        <p class="klein flauw" style="margin-bottom:8px">${t("backuplaatst")}: ${
+          beheerDeel().laatsteBestandBackup?tijdNl(beheerDeel().laatsteBestandBackup):t("backupnooit")}</p>
+        ${staat.kopies===null
+          ? `<button class="knop rand breed" onclick="app.haalKopieLijst()">${t("vernieuwen")}</button>`
+          : (staat.kopiesBezig?`<div class="niets" style="padding:10px">${t("kopieslaadt")}</div>`
+            :(staat.kopies.length?`<div class="kopielijst">${staat.kopies.map(d=>`
+                <div class="kopierij">
+                  <span>${d==="voor-terugzetten"?t("voorterugzetten"):esc(datumNl(d))}</span>
+                  <button class="knop s rand" onclick="app.zetKopieTerug('${esc(d)}')">${t("terugzetten")}</button>
+                </div>`).join("")}</div>`
+              :`<div class="niets" style="padding:10px">${t("geenkopies")}</div>`))}
+        <div style="height:22px"></div>
+
         <h4 class="opschrift" style="margin-bottom:8px">${t("scaninstelling")}</h4>
         <div class="melding info">${t("scanuitleg")}</div>
         ${Object.keys(AFDELINGEN).map(k=>`
@@ -4910,6 +5143,14 @@ function schermInstellingen(){
     </section>
   </div>`;
 }
+/** Onthoudt wanneer er voor het laatst een bestand naar de pc is gehaald.
+ *  Dat is de enige kopie buiten de database. */
+const WEEK=7*86400000;
+function backupNodig(){
+  if(!gebruiker||gebruiker.rol==="afdeling") return false;
+  const w=(bestand.beheer&&bestand.beheer.laatsteBestandBackup)||0;
+  return Date.now()-w>WEEK;
+}
 function exporteer(){
   // Alles bewaren: alle afdelingen, hun boekingen, checks, historie en instellingen.
   const blob=new Blob([JSON.stringify(bestand,null,2)],{type:"application/json"});
@@ -4917,6 +5158,9 @@ function exporteer(){
   a.href=URL.createObjectURL(blob);
   a.download="geuzevoorraad-"+new Date().toISOString().slice(0,10)+".json";
   a.click(); URL.revokeObjectURL(a.href); toast(t("backupgedownload"));
+  const bh=beheerDeel();
+  bh.laatsteBestandBackup=Date.now(); bh.gewijzigd=Date.now();
+  opslaan(); teken();
 }
 function importeer(input){
   if(grendel()) return;
@@ -4963,6 +5207,7 @@ function wisAlles(){
    13. VOORBEELDDATA
    ============================================================ */
 /** Zet de echte magazijnlijst klaar. Alleen voor het magazijn. */
+function verbergBackupBalk(){ staat.backupWeg=true; teken(); }
 function verbergLijstUitnodiging(){ staat.lijstWeg=true; teken(); }
 /** Zet de echte poederlijst klaar. Alleen bij poedercoating. */
 function laadPoederlijst(){
@@ -5113,7 +5358,8 @@ function vulVoorbeeld(){
 /* ============================================================
    14. START
    ============================================================ */
-const app={ga,thema,zetTaal,zetScannen,laadOpnieuw,bevestigJa,bevestigNee,laadPoederlijst,zetKeuzeZoek,kleurErbij,toonBarcodeHint,
+const app={ga,thema,zetTaal,zetScannen,laadOpnieuw,wisselWachtwoord,bevestigJa,bevestigNee,laadPoederlijst,zetKeuzeZoek,kleurErbij,toonBarcodeHint,
+  haalKopieLijst,zetKopieTerug,verbergBackupBalk,
   toonBestelMail,sluitBestelMail,kopieerBestelling,openBestelMail,verbergLijstUitnodiging,laadMagazijnlijst,kiesIcoon,vraagMeldingRecht,zetGeluid,nieuweVraag,plaatsReactie,wisselVraagStatus,
   voegLaagToe,verwijderLaag,bestelLaag,genoegLaag,bewerkVraag,bewaarBewerking,stopBewerking,
   verwijderVraag,kiesVraag,zetVraagNieuw,zetBerichtTab,logIn,logUit,zetAfdeling,testSync,bewaarSyncVelden,zetSyncSoort,scanVoorBarcode,stopBarcodeScan,scanVoorArtikel,stopArtikelScan,ontkoppelBarcode,wisselStandaard,zoekInboek,kiesInboek,zoekIn,kiesArtikel,kiesBoek,slaArtikelOp,verwijderArtikel,
