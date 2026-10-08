@@ -1633,7 +1633,7 @@ const kgTekst=(g,a)=>gramNaarKg(g)+" "+(a?artEenheid(a,g):eenheidBij(g));
    localStorage. Dan werkt de app gewoon door, alleen zonder bewaren.
    ============================================================ */
 const SLEUTEL="geuzevoorraad_v2";
-const VERSIE="2026-10-08 · v92";
+const VERSIE="2026-10-08 · v93";
 
 /* ============================================================
    AFDELINGEN — poedercoating en natlak hebben elk een eigen voorraad
@@ -3569,13 +3569,45 @@ function herberekenAfdeling(sleutel){
   (a.artikelen||[]).forEach(x=>{ x.voorraadGram=som[x.id]||0; });
 }
 
+/** Een volledige stand vertelt ook wat er NIET meer is.
+ *  Haalt een apparaat de hele lijst op nadat het even offline was, dan staat
+ *  daarin alleen wat er wél is. Dat iemand anders intussen iets verwijderde,
+ *  bleef zo onopgemerkt: het artikel bleef op dat toestel staan en werd bij de
+ *  eerstvolgende boeking weer teruggezet. Daarom vullen we een volledige stand
+ *  aan met de regels die wij al eens hebben uitgewisseld maar die er nu niet
+ *  meer in zitten — die zijn door iemand anders weggehaald.
+ *  Wat wij zelf net hebben gemaakt en nog niet verstuurd is, blijft staan. */
+function vulAanMetVerdwenen(regels,delen){
+  const pre=(delen||[]).join("/");
+  const hoortErbij=k=>!pre||k===pre||k.indexOf(pre+"/")===0;
+
+  // Veiligheidsslot: komt er een lege stand binnen terwijl wij nog gegevens
+  // hebben, dan is er iets mis met de database — niet iemand die alles netjes
+  // heeft verwijderd. Dan wissen we hier niets. Sterker nog: we vergeten wat we
+  // al verstuurd hadden, zodat dit toestel alles opnieuw wegschrijft en de
+  // database zichzelf herstelt.
+  let echteRegels=0;
+  for(const k in regels) if(regels[k]!==null) echteRegels++;
+  if(!echteRegels){
+    for(const k in verstuurd) if(hoortErbij(k)) delete verstuurd[k];
+    return regels;
+  }
+
+  for(const k in verstuurd){
+    if(!hoortErbij(k)) continue;
+    if(!(k in regels)) regels[k]=null;
+  }
+  return regels;
+}
+
 function verwerkBinnen(regels){
   let veranderd=false;
   const raakt={};
   for(const k in regels){
     if(pasRegelToe(k,regels[k])) veranderd=true;
     // wat we binnenkrijgen hoeven we niet terug te sturen
-    verstuurd[k]=JSON.stringify(regels[k]);
+    if(regels[k]===null) delete verstuurd[k];
+    else verstuurd[k]=JSON.stringify(regels[k]);
     const d=k.split("/");
     if(d[0]==="afd"&&(d[2]==="mutaties"||d[2]==="artikelen")) raakt[d[1]]=true;
   }
@@ -3640,8 +3672,9 @@ function startStroom(){
   try{
     stroom=new EventSource(pad);
     const leeft=()=>{ laatsteStroom=Date.now(); };
-    stroom.addEventListener("put",e=>verwerkStroom(e));
-    stroom.addEventListener("patch",e=>verwerkStroom(e));
+    // "put" is een volledige stand van die tak, "patch" alleen een wijziging.
+    stroom.addEventListener("put",e=>verwerkStroom(e,true));
+    stroom.addEventListener("patch",e=>verwerkStroom(e,false));
     stroom.addEventListener("keep-alive",leeft);
     stroom.addEventListener("auth_revoked",leeft);
     stroom.onmessage=leeft;
@@ -3663,7 +3696,7 @@ function stopStroom(){
   clearInterval(waakhond); waakhond=null;
   if(stroom){ try{ stroom.close(); }catch(e){} stroom=null; }
 }
-function verwerkStroom(e){
+function verwerkStroom(e,volledig){
   syncStand.ok=true; syncStand.laatst=Date.now(); laatsteStroom=Date.now();
   let pak=null;
   try{ pak=JSON.parse(e.data); }catch(err){ return; }
@@ -3671,6 +3704,7 @@ function verwerkStroom(e){
   const delen=String(pak.path||"/").split("/").filter(Boolean);
   const regels={};
   ontleed(delen,pak.data,regels);
+  if(volledig) vulAanMetVerdwenen(regels,delen);
   verwerkBinnen(regels);
   werkSyncLampjeBij();
 }
@@ -3683,6 +3717,8 @@ async function haalAlles(){
     const boom=await r.json();
     const regels={};
     ontleed([],boom||{},regels);
+    // Dit is de volledige stand, dus ook wat er intussen verwijderd is.
+    vulAanMetVerdwenen(regels,[]);
     verwerkBinnen(regels);
     syncStand.ok=true; syncStand.laatst=Date.now(); laatsteStroom=Date.now();
     werkSyncLampjeBij();
