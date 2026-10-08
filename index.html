@@ -426,6 +426,28 @@ body.licht .merkje.lime{background:var(--limeZacht);color:var(--limeTekst)}
 .syncbalk>div{margin-right:auto}
 .syncbalk{flex-wrap:wrap}
 /* Naam links, aan/uit rechts, ook als het paneel smal is. */
+/* Rechten per account: eerst het account kiezen, dan de schakelaars. */
+/* Het (i)-knopje met de uitleg eronder. */
+/* 28px: groot genoeg om er met de vinger op te mikken. */
+.infoknop{width:28px;height:28px;border-radius:50%;border:1px solid var(--rand);
+  background:none;color:var(--tekstFlauw);font-size:.82rem;font-weight:700;line-height:1;
+  cursor:pointer;padding:0;margin-left:6px;vertical-align:middle;
+  display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.infoknop:hover{color:var(--tekst);border-color:var(--randSterk)}
+.infoknop.aan{background:var(--lime);color:var(--opLime);border-color:transparent}
+.infotekst{display:block;background:var(--kaart);border:1px solid var(--rand);
+  border-radius:var(--r-klein);padding:10px 12px;margin:8px 0 12px;
+  font-size:.82rem;line-height:1.5;font-weight:500;color:var(--tekstZacht);text-transform:none;
+  letter-spacing:normal}
+.accountkiezer{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.accountkiezer button{border:1px solid var(--rand);background:var(--kaart);color:var(--tekstZacht);
+  border-radius:99px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer}
+.accountkiezer button.actief{background:var(--lime);color:var(--opLime);border-color:transparent}
+.rechtrij{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.rechtrij>span{flex:1 1 150px;min-width:0;font-size:.88rem}
+.rechtrij>span .klein{font-weight:500}
+.rechtrij .richting{flex:0 0 auto;width:auto;padding:3px;flex-wrap:nowrap}
+.rechtrij .richting button{flex:0 0 auto;padding:0 15px;min-height:34px;font-size:.8rem;white-space:nowrap}
 .kopielijst{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
 .kopierij{display:flex;align-items:center;gap:10px;background:var(--kaart);
   border:1px solid var(--rand);border-radius:var(--r-klein);padding:8px 12px}
@@ -959,6 +981,9 @@ nl:{
  herstelpunten:"Herstelpunten", herstelpuntenuitleg:"Tijdens werktijd wordt er elk uur een kopie bewaard, en van elke dag één. Ging er iets mis, dan zet je hiermee een uur of een dag terug.", geenkopies:"Nog geen herstelpunten", kopieslaadt:"Even ophalen…", vernieuwen:"Lijst ophalen", terugzetten:"Terugzetten", kopievraag:"Alles terugzetten naar {d}? Er stonden toen {n} artikelen in. Wat er nu staat wordt vervangen — op alle apparaten.", kopieteruggezet:"Teruggezet naar", kopiemislukt:"Dat herstelpunt kon niet worden opgehaald", laatstekopie:"Laatste kopie", voorterugzetten:"vlak voor het terugzetten",
  backuptijd:"Tijd voor een back-up", backuptijdsub:"Zet eens per week een kopie op de bedrijfsserver. Dat is de enige kopie die blijft bestaan als er iets met de database gebeurt.", nuopslaan:"Nu opslaan", backuplaatst:"Laatste back-up naar de pc", backupnooit:"nog nooit", uurkopie:"uurkopie",
  wachtwoord:"Wachtwoord", toonwachtwoord:"Wachtwoord tonen", verbergwachtwoord:"Wachtwoord verbergen",
+ rechten:"Rechten per account", rechtenuitleg:"Zet per account aan en uit wat iemand mag. Verander je niets, dan blijft alles zoals het nu werkt.", adminaltijd:"De beheerder mag altijd alles. Dat kan niet uitgezet worden, anders kun je jezelf buitensluiten.", standaardterug:"Terug naar de standaard", recht_boeken:"In- en uitboeken", rechtuit_boeken:"Voorraad afboeken en aanvullen", recht_nieuw:"Nieuwe artikelen toevoegen", rechtuit_nieuw:"Een coating of magazijnartikel aanmaken", recht_bewerken:"Artikelgegevens aanpassen", rechtuit_bewerken:"Soort, merk, type, kleur, glansgraad", recht_inkoop:"Inkoopgegevens aanpassen", rechtuit_inkoop:"Leverancier, standaardvoorraad, minimum en maximum", recht_barcodetypen:"Barcode met de hand typen", rechtuit_barcodetypen:"Zonder scannen een barcode invullen", recht_verwijderen:"Artikelen verwijderen", rechtuit_verwijderen:"Alleen als de voorraad op 0 staat", recht_bestellen:"Bestelmail opstellen", rechtuit_bestellen:"De knop Bestellen bij de leveranciers", recht_checknieuw:"CoatingCheck aanmaken", rechtuit_checknieuw:"Een nieuwe check plaatsen", recht_checkweg:"CoatingCheck verwijderen", rechtuit_checkweg:"Een check definitief weghalen", recht_backup:"Back-up maken en inlezen", rechtuit_backup:"Gegevens naar de pc halen of terugzetten", recht_herstel:"Herstelpunten terugzetten", rechtuit_herstel:"Alles terugzetten naar een eerdere dag",
+ magnietmeer:"Dat mag je niet",
+ uitleg:"Uitleg",
  barcodescannen:"Barcode scannen", scanstoppen:"Scannen stoppen", scanvoorbarcode:"Scan de barcode van de werkorder", barcodegescand:"Barcode overgenomen", nietgekoppeld:"Deze code is nog niet gekoppeld aan een coating.", nietgekoppeldsub:"Uitboeken kan daarom niet. Voeg de coating eerst toe bij Inboeken; de code wordt dan meteen ingevuld.", naarinboeken:"Toevoegen bij Inboeken",
  nuinhuis:"Nu in huis", kgperdoos:"kg per doos", kieseerst:"Kies eerst een hoeveelheid", vulkilo:"Vul het aantal kilo per doos in", vulmerk:"Vul het merk in, bijvoorbeeld Ganzlin", vulkleur:"Vul de kleur in, bijvoorbeeld RAL 7036", bestondal:"Bestond al — voorraad bijgeboekt", bestondalgekoppeld:"Bestond al — voorraad bijgeboekt en barcode gekoppeld", camerawerktniet:"Camera werkt niet?", bijgeboekt:"bijgeboekt", geboekt:"geboekt",
  kg:"kg", dozen:"dozen", doos:"doos"
@@ -1066,6 +1091,9 @@ en:{
  herstelpunten:"Restore points", herstelpuntenuitleg:"During working hours a copy is kept every hour, plus one per day. If something went wrong, you can go back an hour or a day here.", geenkopies:"No restore points yet", kopieslaadt:"Fetching…", vernieuwen:"Fetch list", terugzetten:"Restore", kopievraag:"Restore everything to {d}? It held {n} items then. What is there now will be replaced — on all devices.", kopieteruggezet:"Restored to", kopiemislukt:"That restore point could not be fetched", laatstekopie:"Last copy", voorterugzetten:"just before restoring",
  backuptijd:"Time for a backup", backuptijdsub:"Put a copy on the company server once a week. That is the only copy that survives if something happens to the database.", nuopslaan:"Save now", backuplaatst:"Last backup to the pc", backupnooit:"never", uurkopie:"hourly copy",
  wachtwoord:"Password", toonwachtwoord:"Show password", verbergwachtwoord:"Hide password",
+ rechten:"Rights per account", rechtenuitleg:"Turn on and off what each account may do. Change nothing and everything stays as it works now.", adminaltijd:"The administrator may always do everything. That cannot be turned off, otherwise you could lock yourself out.", standaardterug:"Back to the default", recht_boeken:"Book in and out", rechtuit_boeken:"Deduct and replenish stock", recht_nieuw:"Add new items", rechtuit_nieuw:"Create a coating or warehouse item", recht_bewerken:"Edit item details", rechtuit_bewerken:"Kind, brand, type, colour, gloss", recht_inkoop:"Edit purchasing details", rechtuit_inkoop:"Supplier, standard stock, minimum and maximum", recht_barcodetypen:"Type a barcode by hand", rechtuit_barcodetypen:"Enter a barcode without scanning", recht_verwijderen:"Delete items", rechtuit_verwijderen:"Only when the stock is 0", recht_bestellen:"Compose order email", rechtuit_bestellen:"The Order button at the suppliers", recht_checknieuw:"Create a CoatingCheck", rechtuit_checknieuw:"Place a new check", recht_checkweg:"Delete a CoatingCheck", rechtuit_checkweg:"Remove a check for good", recht_backup:"Make and load a backup", rechtuit_backup:"Fetch data to the pc or restore it", recht_herstel:"Restore a restore point", rechtuit_herstel:"Put everything back to an earlier day",
+ magnietmeer:"You are not allowed to do that",
+ uitleg:"Explanation",
  barcodescannen:"Scan barcode", scanstoppen:"Stop scanning", scanvoorbarcode:"Scan the barcode on the work order", barcodegescand:"Barcode captured", nietgekoppeld:"This code is not linked to a coating yet.", nietgekoppeldsub:"So it cannot be booked out. Add the coating under Book in first; the code is filled in for you.", naarinboeken:"Add under Book in",
  nuinhuis:"Now in stock", kgperdoos:"kg per box", kieseerst:"Pick an amount first", vulkilo:"Enter the kilos per box", vulmerk:"Enter the brand, for example Ganzlin", vulkleur:"Enter the colour, for example RAL 7036", bestondal:"Already existed — stock booked in", bestondalgekoppeld:"Already existed — stock booked in and barcode linked", camerawerktniet:"Camera not working?", bijgeboekt:"booked in", geboekt:"booked",
  kg:"kg", dozen:"boxes", doos:"box"
@@ -1173,6 +1201,9 @@ hu:{
  herstelpunten:"Visszaállítási pontok", herstelpuntenuitleg:"Munkaidőben óránként készül másolat, és naponta egy. Ha valami elromlott, itt visszaléphet egy órát vagy egy napot.", geenkopies:"Még nincs visszaállítási pont", kopieslaadt:"Betöltés…", vernieuwen:"Lista lekérése", terugzetten:"Visszaállítás", kopievraag:"Mindent visszaállít erre: {d}? Akkor {n} cikk volt benne. A jelenlegi adatok felülíródnak — minden eszközön.", kopieteruggezet:"Visszaállítva erre:", kopiemislukt:"A visszaállítási pontot nem sikerült lekérni", laatstekopie:"Utolsó másolat", voorterugzetten:"közvetlenül a visszaállítás előtt",
  backuptijd:"Ideje egy mentésnek", backuptijdsub:"Hetente egyszer tegyen egy másolatot a céges szerverre. Ez az egyetlen másolat, amely megmarad, ha az adatbázissal történik valami.", nuopslaan:"Mentés most", backuplaatst:"Utolsó mentés a gépre", backupnooit:"soha", uurkopie:"óránkénti másolat",
  wachtwoord:"Jelszó", toonwachtwoord:"Jelszó megjelenítése", verbergwachtwoord:"Jelszó elrejtése",
+ rechten:"Jogosultságok fiókonként", rechtenuitleg:"Kapcsolja be és ki, hogy melyik fiók mit tehet. Ha nem változtat semmit, minden úgy marad, ahogy most működik.", adminaltijd:"A rendszergazda mindig mindent megtehet. Ezt nem lehet kikapcsolni, különben kizárhatná magát.", standaardterug:"Vissza az alapértelmezéshez", recht_boeken:"Be- és kikönyvelés", rechtuit_boeken:"Készlet levonása és feltöltése", recht_nieuw:"Új cikkek hozzáadása", rechtuit_nieuw:"Bevonat vagy raktári cikk létrehozása", recht_bewerken:"Cikkadatok módosítása", rechtuit_bewerken:"Fajta, márka, típus, szín, fényesség", recht_inkoop:"Beszerzési adatok módosítása", rechtuit_inkoop:"Beszállító, alapkészlet, minimum és maximum", recht_barcodetypen:"Vonalkód kézi beírása", rechtuit_barcodetypen:"Vonalkód megadása beolvasás nélkül", recht_verwijderen:"Cikkek törlése", rechtuit_verwijderen:"Csak ha a készlet 0", recht_bestellen:"Rendelési e-mail írása", rechtuit_bestellen:"A Rendelés gomb a beszállítóknál", recht_checknieuw:"CoatingCheck létrehozása", rechtuit_checknieuw:"Új ellenőrzés indítása", recht_checkweg:"CoatingCheck törlése", rechtuit_checkweg:"Ellenőrzés végleges törlése", recht_backup:"Mentés készítése és betöltése", rechtuit_backup:"Adatok mentése a gépre vagy visszaállítása", recht_herstel:"Visszaállítási pont használata", rechtuit_herstel:"Minden visszaállítása egy korábbi napra",
+ magnietmeer:"Ehhez nincs jogosultsága",
+ uitleg:"Magyarázat",
  barcodescannen:"Vonalkód beolvasása", scanstoppen:"Beolvasás leállítása", scanvoorbarcode:"Olvassa be a munkalap vonalkódját", barcodegescand:"Vonalkód átvéve", nietgekoppeld:"Ez a kód még nincs bevonathoz kapcsolva.", nietgekoppeldsub:"Ezért nem lehet kivételezni. Előbb adja hozzá a bevonatot a Bevételezés fülön; a kód automatikusan bekerül.", naarinboeken:"Hozzáadás a Bevételezésnél",
  nuinhuis:"Jelenlegi készlet", kgperdoos:"kg dobozonként", kieseerst:"Előbb válasszon mennyiséget", vulkilo:"Adja meg a kilogrammot dobozonként", vulmerk:"Adja meg a gyártót, például Ganzlin", vulkleur:"Adja meg a színt, például RAL 7036", bestondal:"Már létezett — készlet bevételezve", bestondalgekoppeld:"Már létezett — készlet bevételezve és vonalkód hozzákapcsolva", camerawerktniet:"Nem működik a kamera?", bijgeboekt:"bevételezve", geboekt:"könyvelve",
  kg:"kg", dozen:"doboz", doos:"doboz"
@@ -1280,6 +1311,9 @@ ro:{
  herstelpunten:"Puncte de restaurare", herstelpuntenuitleg:"În timpul programului se păstrează o copie în fiecare oră și una pe zi. Dacă ceva a mers prost, poți reveni cu o oră sau o zi.", geenkopies:"Încă niciun punct de restaurare", kopieslaadt:"Se încarcă…", vernieuwen:"Preia lista", terugzetten:"Restaurează", kopievraag:"Restaurezi totul la {d}? Atunci erau {n} articole. Ce este acum va fi înlocuit — pe toate dispozitivele.", kopieteruggezet:"Restaurat la", kopiemislukt:"Punctul de restaurare nu a putut fi preluat", laatstekopie:"Ultima copie", voorterugzetten:"chiar înainte de restaurare",
  backuptijd:"E timpul pentru o copie", backuptijdsub:"Pune o copie pe serverul firmei o dată pe săptămână. Este singura copie care rămâne dacă se întâmplă ceva cu baza de date.", nuopslaan:"Salvează acum", backuplaatst:"Ultima copie pe pc", backupnooit:"niciodată", uurkopie:"copie orară",
  wachtwoord:"Parolă", toonwachtwoord:"Arată parola", verbergwachtwoord:"Ascunde parola",
+ rechten:"Drepturi per cont", rechtenuitleg:"Activează și dezactivează ce poate face fiecare cont. Dacă nu schimbi nimic, totul rămâne cum funcționează acum.", adminaltijd:"Administratorul poate face întotdeauna totul. Nu poate fi dezactivat, altfel te-ai putea bloca singur.", standaardterug:"Înapoi la setarea implicită", recht_boeken:"Înregistrare intrări și ieșiri", rechtuit_boeken:"Scădere și completare stoc", recht_nieuw:"Adăugare articole noi", rechtuit_nieuw:"Creează o vopsea sau un articol de depozit", recht_bewerken:"Modificare date articol", rechtuit_bewerken:"Tip, marcă, fel, culoare, luciu", recht_inkoop:"Modificare date de achiziție", rechtuit_inkoop:"Furnizor, stoc standard, minim și maxim", recht_barcodetypen:"Introducere cod de bare manual", rechtuit_barcodetypen:"Completează un cod fără scanare", recht_verwijderen:"Ștergere articole", rechtuit_verwijderen:"Doar când stocul este 0", recht_bestellen:"Compunere e-mail comandă", rechtuit_bestellen:"Butonul Comandă la furnizori", recht_checknieuw:"Creare CoatingCheck", rechtuit_checknieuw:"Plasează o verificare nouă", recht_checkweg:"Ștergere CoatingCheck", rechtuit_checkweg:"Elimină definitiv o verificare", recht_backup:"Creare și încărcare copie", rechtuit_backup:"Adu datele pe pc sau restaurează-le", recht_herstel:"Restaurare punct de restaurare", rechtuit_herstel:"Readu totul la o zi anterioară",
+ magnietmeer:"Nu ai dreptul la asta",
+ uitleg:"Explicație",
  barcodescannen:"Scanează codul", scanstoppen:"Oprește scanarea", scanvoorbarcode:"Scanează codul de bare de pe comandă", barcodegescand:"Cod de bare preluat", nietgekoppeld:"Acest cod nu este încă legat de o vopsea.", nietgekoppeldsub:"De aceea nu se poate scădea. Adaugă mai întâi vopseaua la Recepție; codul se completează automat.", naarinboeken:"Adaugă la Recepție",
  nuinhuis:"Acum în stoc", kgperdoos:"kg per cutie", kieseerst:"Alege mai întâi o cantitate", vulkilo:"Introdu kilogramele per cutie", vulmerk:"Introdu marca, de exemplu Ganzlin", vulkleur:"Introdu culoarea, de exemplu RAL 7036", bestondal:"Exista deja — stoc recepționat", bestondalgekoppeld:"Exista deja — stoc recepționat și cod de bare legat", camerawerktniet:"Camera nu funcționează?", bijgeboekt:"recepționat", geboekt:"înregistrat",
  kg:"kg", dozen:"cutii", doos:"cutie"
@@ -1599,7 +1633,7 @@ const kgTekst=(g,a)=>gramNaarKg(g)+" "+(a?artEenheid(a,g):eenheidBij(g));
    localStorage. Dan werkt de app gewoon door, alleen zonder bewaren.
    ============================================================ */
 const SLEUTEL="geuzevoorraad_v2";
-const VERSIE="2026-09-03 · v88";
+const VERSIE="2026-10-08 · v92";
 
 /* ============================================================
    AFDELINGEN — poedercoating en natlak hebben elk een eigen voorraad
@@ -1633,11 +1667,127 @@ const GEBRUIKERS={
   "K@ntoor":    {naam:"Kantoor",       rol:"kijken",  afdelingen:["poeder","natlak","magazijn"], wijzigen:false}
 };
 let gebruiker=null;
+
+/* ============================================================
+   RECHTEN PER ACCOUNT
+   De beheerder zet per account aan en uit wat iemand mag. Staat er niets
+   ingesteld, dan geldt de standaard van die rol — precies zoals het altijd
+   werkte. Zo verandert er niets totdat je zelf iets omzet.
+   ============================================================ */
+const ACCOUNTS=["Admin","Kantoor","Poedercoating","Natlak","Magazijn"];
+
+/* Wat je per account aan en uit kunt zetten, in de volgorde van het scherm. */
+const RECHTEN=[
+  "boeken","nieuw","bewerken","inkoop","barcodetypen","verwijderen",
+  "bestellen","checknieuw","checkweg","backup","herstel"
+];
+
+const accountVan=g=>(g||gebruiker||{}).naam||"";
+
+/** De rol die bij een account hoort. */
+function rolVan(naam){
+  for(const sleutel in GEBRUIKERS){
+    if(GEBRUIKERS[sleutel].naam===naam) return GEBRUIKERS[sleutel];
+  }
+  return null;
+}
+
+/** Hoe het altijd al werkte: de standaard per rol. */
+function standaardRecht(recht,naam){
+  const g=rolVan(naam);
+  if(!g) return false;
+  const admin=g.rol==="admin", kantoor=g.rol==="kijken", afdeling=g.rol==="afdeling";
+  if(admin) return true;
+  switch(recht){
+    case "boeken":       return !!g.wijzigen;
+    case "nieuw":        return !!g.wijzigen;
+    case "bewerken":     return !!g.wijzigen||kantoor;   // kantoor: in het magazijn
+    case "inkoop":       return !!g.wijzigen||kantoor;
+    case "barcodetypen": return kantoor;
+    case "verwijderen":  return false;
+    case "bestellen":    return kantoor;
+    case "checknieuw":   return !!g.wijzigen||kantoor;
+    case "checkweg":     return !!g.wijzigen||kantoor;
+    case "backup":       return !afdeling;
+    case "herstel":      return false;
+  }
+  return false;
+}
+
+/** Wat dit account nu mag: de ingestelde waarde, anders de standaard. */
+function mag(recht,naam){
+  const account=naam||accountVan();
+  if(!account) return false;
+  const g=rolVan(account);
+  if(g&&g.rol==="admin") return true;          // de beheerder mag altijd alles
+  const r=(beheerDeel().rechten||{})[account];
+  if(r&&typeof r[recht]==="boolean") return r[recht];
+  return standaardRecht(recht,account);
+}
+
+/** Een recht omzetten. Alleen de beheerder, en nooit voor zichzelf. */
+function zetRecht(account,recht,aan){
+  if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
+  const g=rolVan(account);
+  if(g&&g.rol==="admin") return;
+  const bh=beheerDeel();
+  bh.rechten=bh.rechten||{};
+  bh.rechten[account]=bh.rechten[account]||{};
+  bh.rechten[account][recht]=!!aan;
+  bh.gewijzigd=Date.now();
+  opslaan(); teken();
+}
+/** Terug naar de standaard voor dit account. */
+function herstelRechten(account){
+  if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
+  const bh=beheerDeel();
+  if(bh.rechten&&bh.rechten[account]){
+    delete bh.rechten[account];
+    bh.gewijzigd=Date.now();
+    opslaan(); teken();
+  }
+}
+/** Heeft de beheerder dit recht zelf omgezet, of staat het nog op de standaard? */
+function rechtGezet(recht,naam){
+  const r=(beheerDeel().rechten||{})[naam||accountVan()];
+  return !!(r&&typeof r[recht]==="boolean");
+}
+function kiesRechtAccount(naam){ staat.rechtAccount=naam; teken(); }
+
+function rechtenVak(){
+  const account=staat.rechtAccount||"Kantoor";
+  const g=rolVan(account);
+  const isAdmin=g&&g.rol==="admin";
+  const bh=beheerDeel();
+  const eigen=(bh.rechten||{})[account]||{};
+  return `
+    <h4 class="opschrift" style="margin-bottom:8px">${t("rechten")}${infoBij("rechtenuitleg")}</h4>
+    ${infoTekst("rechtenuitleg")}
+    <div class="accountkiezer">
+      ${ACCOUNTS.map(a=>`<button class="${a===account?"actief":""}"
+        onclick="app.kiesRechtAccount('${esc(a)}')">${esc(a)}</button>`).join("")}
+    </div>
+    ${isAdmin?`<div class="melding let">${t("adminaltijd")}</div>`:`
+      ${RECHTEN.map(r=>`
+        <div class="rechtrij">
+          <span><b>${t("recht_"+r)}</b><br>
+            <span class="klein flauw">${t("rechtuit_"+r)}</span></span>
+          <div class="richting opKaart" style="margin:0">
+            <button class="${mag(r,account)?"actief":""}" onclick="app.zetRecht('${esc(account)}','${r}',true)">${t("aan")}</button>
+            <button class="${mag(r,account)?"":"actief"}" onclick="app.zetRecht('${esc(account)}','${r}',false)">${t("uit")}</button>
+          </div>
+        </div>`).join("")}
+      ${Object.keys(eigen).length?`<button class="knop rand breed" style="margin-top:10px"
+        onclick="app.herstelRechten('${esc(account)}')">${t("standaardterug")}</button>`:""}
+    `}
+    <div style="height:22px"></div>`;
+}
+
 /* Twee rechten naast elkaar:
    - boeken: voorraad in- en uitboeken, gegevens wissen of inlezen
    - bewerken: de gegevens van een artikel aanpassen
    Kantoor mag in het magazijn wel bewerken, maar nergens boeken. */
-const magBoeken=()=>!!(gebruiker&&gebruiker.wijzigen);
+const magBoeken=()=>!!gebruiker&&mag("boeken");
 /* Scannen kan per afdeling uitgezet worden; de beheerder bepaalt dat.
    Staat het uit, dan verdwijnen alle scanknoppen en gaat boeken via de lijst. */
 /* Beheerinstellingen gelden voor het hele bedrijf en gaan daarom mee met de
@@ -1656,7 +1806,7 @@ function scanAan(afd){
 const magScannen=()=>magBoeken()&&scanAan();
 /* Bestellen doen kantoor en de beheerder; de afdelingen geven alleen door
    wat er nodig is. */
-const magBestellen=()=>!!(gebruiker&&(gebruiker.rol==="admin"||gebruiker.rol==="kijken"));
+const magBestellen=()=>!!gebruiker&&mag("bestellen");
 function zetScannen(afd,aan){
   if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
   const bh=beheerDeel();
@@ -1668,11 +1818,14 @@ function zetScannen(afd,aan){
 /* Kantoor mag overal de inkoopgegevens bijhouden: leverancier, standaard-
    voorraad en de grenzen. De coatinggegevens zelf (kleur, glans, type) blijven
    van de afdeling — behalve in het magazijn, waar kantoor alles beheert. */
-const magBewerken=()=>!!(gebruiker&&(gebruiker.wijzigen||gebruiker.rol==="kijken"));
+const magBewerken=()=>!!gebruiker&&(mag("inkoop")||mag("bewerken"));
 /* Typen mag alleen op kantoor: op de vloer is één tikfout genoeg om een
    barcode onvindbaar te maken. Scannen mag iedereen die mag bewerken. */
-const magBarcodeTypen=()=>!!(gebruiker&&(gebruiker.rol==="admin"||gebruiker.rol==="kijken"));
-const magVolledigBewerken=()=>!!(gebruiker&&(gebruiker.wijzigen||isMagazijn()));
+const magBarcodeTypen=()=>!!gebruiker&&mag("barcodetypen");
+/* Kantoor beheert het magazijn volledig; bij coating alleen als de beheerder
+   dat recht aanzet. */
+const magVolledigBewerken=()=>!!gebruiker&&mag("bewerken")
+  &&(gebruiker.rol!=="kijken"||isMagazijn()||rechtGezet("bewerken"));
 const magWijzigen=magBoeken;
 const afdInfo=()=>AFDELINGEN[staat.afdeling]||AFDELINGEN.poeder;
 const eenheid=()=>t(staat.afdeling==="natlak"?"liter":staat.afdeling==="magazijn"?"stuk":"kg");
@@ -1701,6 +1854,27 @@ let migratieFout="";
 /* Waar je in elke lijst stond, per scherm bewaard. Buiten het scherm om,
    want op de telefoon verdwijnt de lijst als je een artikel opent. */
 let scrollPlek={};
+/** Typt iemand op dit moment? Dan niet aan de schuifstand zitten: de telefoon
+   houdt het veld zelf in beeld, en elke extra sprong is storend. */
+/** Een klein (i) achter een kopje. Tik erop en de uitleg verschijnt eronder;
+ *  tik nog eens en hij is weer weg. Zo blijft het scherm rustig. */
+function infoBij(sleutel){
+  const open=staat.info===sleutel;
+  return `<button type="button" class="infoknop${open?" aan":""}" title="${t("uitleg")}"
+    aria-label="${t("uitleg")}" onclick="app.wisselInfo('${sleutel}')">i</button>`;
+}
+function infoTekst(sleutel){
+  return staat.info===sleutel?`<div class="infotekst">${t(sleutel)}</div>`:"";
+}
+function wisselInfo(sleutel){
+  staat.info=staat.info===sleutel?null:sleutel;
+  teken();
+}
+
+function aanHetTypen(){
+  const e=document.activeElement;
+  return !!(e&&(e.tagName==="INPUT"||e.tagName==="TEXTAREA"));
+}
 function vergeetScrollPlek(){
   scrollPlek={};
   try{ window.scrollTo(0,0); }catch(e){}
@@ -1931,7 +2105,7 @@ const staat={scherm:"voorraad",artikelId:null,boekId:null,zoek:"",
   richting:"uit",nieuwArtikel:true,nieuweSoort:"topcoat",herinnering:null,onbekendeCode:"",keuzeCode:"",keuzeZoek:"",voorstelBarcode:"",boekModus:"",
   boekModus:"uit",scanBarcode:false,nieuwForm:{},inboekZoek:"",inboekArtikelId:null,
   lijstWeg:false,backupWeg:false,bestelLev:null,
-  bevestig:null,kopies:null,kopiesBezig:false,toonWw:false,
+  bevestig:null,info:null,kopies:null,kopiesBezig:false,toonWw:false,rechtAccount:"Kantoor",
   vraagId:null,vraagNieuw:false,vraagBewerk:false,berichtTab:"vragen",vraagForm:null,
   scanDoel:"",scanArtikelId:null,artikelForm:{},
   uitScan:false,uitZoek:""};
@@ -2019,7 +2193,7 @@ function teken(){
       }
     });
     const py=scrollPlek[sleutel+"|pagina"];
-    if(py&&Math.abs(window.scrollY-py)>4) window.scrollTo(0,py);
+    if(py&&!aanHetTypen()&&Math.abs(window.scrollY-py)>4) window.scrollTo(0,py);
   };
   zetTerug();
   // De lijst is soms nog aan het opbouwen; daarna nog een paar keer proberen.
@@ -2099,7 +2273,7 @@ function tekenScherm(){
         <div style="min-width:0"><b>${t("backuptijd")}</b><br>
           <span class="klein">${t("backuptijdsub")}</span></div>
         <button class="knop s rand" onclick="app.verbergBackupBalk()">${t("later")}</button>
-        <button class="knop s lime" onclick="app.exporteer()">${t("nuopslaan")}</button>
+        ${mag("backup")?`<button class="knop s lime" onclick="app.exporteer()">${t("nuopslaan")}</button>`:""}
       </div>`:"";
   }
   const vw=document.getElementById("versiewaarschuwing");
@@ -2585,6 +2759,7 @@ function verwijderLaag(i){
 }
 
 function nieuweVraag(){
+  if(!mag("checknieuw")) return toast(t("magnietmeer"));
   if(grendelVraag()) return;
   bewaarVraagForm();
   const f=staat.vraagForm;
@@ -2638,6 +2813,7 @@ function verwijderVraag(){
   if(grendel()) return;
   const v=vraag(staat.vraagId);
   if(!v) return;
+  if(!mag("checkweg")) return toast(t("magnietmeer"));
   vraagBevestiging(t("vraagweg"),t("vraagverwijderen"),()=>{
     db.vragen=vragenVan().filter(x=>x.id!==v.id);
     staat.vraagId=null;
@@ -2682,9 +2858,8 @@ function schermBerichten(){
   if(tab==="historie"){
     const oud=(db.historie||[]).slice().sort((a,b)=>(b.gearchiveerdOp||0)-(a.gearchiveerdOp||0));
     return `<div class="tweepaneel"><section class="paneel scroll" style="grid-column:1/-1">
-      <div class="paneelkop"><h2>${t("historie")}</h2><span class="pil">${oud.length}</span>${taalKiezer()}</div>
-      <div class="paneelbody vast">${kop}
-        <p class="klein flauw">${t("historieuitleg")}</p></div>
+      <div class="paneelkop"><h2>${t("historie")}${infoBij("historieuitleg")}</h2><span class="pil">${oud.length}</span>${taalKiezer()}</div>
+      <div class="paneelbody vast">${kop}${infoTekst("historieuitleg")}</div>
       <div class="paneelbody strak">
         ${oud.length?oud.map(v=>`<div class="rij zonderstip dof">
           <span style="min-width:0">
@@ -2711,8 +2886,8 @@ function schermBerichten(){
       <div class="paneelkop"><h2>${t("vragen")}</h2><span class="pil">${nOpen}</span>${taalKiezer()}</div>
       <div class="paneelbody vast">
         ${kop}
-        <button class="knop lime breed nietKijken"
-          onclick="app.zetVraagNieuw(true)">${t("nieuwevraag")}</button>
+        ${mag("checknieuw")?`<button class="knop lime breed nietKijken"
+          onclick="app.zetVraagNieuw(true)">${t("nieuwevraag")}</button>`:""}
       </div>
       <div class="paneelbody strak"><div id="vraaglijst">${vraagLijst()}</div></div>
     </section>
@@ -2938,7 +3113,7 @@ function vraagFormulier(){
 
     <label class="veld" style="margin-top:16px"><span>${t("toelichting")}</span>
       <textarea id="vToel" rows="2" placeholder="Alu traanplaat & RVS kokerframe">${esc(f.toelichting||"")}</textarea></label>
-    <button class="knop lime breed" onclick="app.nieuweVraag()">${t("vraagstellen")}</button>
+    ${mag("checknieuw")?`<button class="knop lime breed" onclick="app.nieuweVraag()">${t("vraagstellen")}</button>`:""}
   </div>`;
 }
 
@@ -3637,7 +3812,7 @@ async function haalKopieLijst(){
 }
 /** Zet een dag terug. Alles wat er nu staat wordt vervangen door die kopie. */
 async function zetKopieTerug(dag){
-  if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
+  if(!mag("herstel")) return toast(t("magnietmeer"));
   const basis=backupBasis();
   let pak=null;
   try{
@@ -3923,7 +4098,8 @@ function voorraadDetail(){
                  value="${esc(af.fArtnr!==undefined?af.fArtnr:(a.artikelnummer||""))}"></label>
         <label class="veld"><span>${t("kleur")}</span><input id="fKleur" value="${esc(af.fKleur!==undefined?af.fKleur:a.kleur)}" placeholder="RAL 9005"
           oninput="app.toonKleur(this.value,'kleurHintDetail')"></label>
-        <label class="veld"><span>${t("glansgu")}</span>
+        ${infoTekst("guuitleg")}
+        <label class="veld"><span>${t("glansgu")}${infoBij("guuitleg")}</span>
           <input id="fGlans" type="text" inputmode="decimal" placeholder="72"
                  value="${esc(af.fGlans!==undefined?af.fGlans:(glansGetal(a.glans)!==null?glansGetal(a.glans):""))}"></label>
         <label class="veld"><span>${isMagazijn()?t("aantalperverpakking"):staat.afdeling==="natlak"?t("literperbus"):t("kiloperdoos")}</span>
@@ -3938,7 +4114,7 @@ function voorraadDetail(){
         ${isMagazijn()?"":`<label class="veld"><span>${t("leverancier")}</span>
           <input id="fLev" list="leveranciers" placeholder="Axalta"
                  value="${esc(af.fLev!==undefined?af.fLev:(a.leverancier||""))}"></label>`}
-        <label class="veld"><span>${t("standaardvoorraad")}</span>
+        <label class="veld"><span>${t("standaardvoorraad")}${infoBij("standaarduitleg")}</span>
           <select id="fStandaard2" onchange="app.wisselStandaard()">
             <option value="1" ${bewaakt?"selected":""}>${t("ja")}</option>
             <option value="0" ${bewaakt?"":"selected"}>${t("nee")}</option></select></label>
@@ -3949,15 +4125,16 @@ function voorraadDetail(){
           <input id="fMax" type="text" inputmode="decimal" value="${esc(af.fMax!==undefined?af.fMax:(maxVan(a)?gramNaarKg(maxVan(a)):""))}"></label>
         `:""}
       </fieldset>
-      ${bewaakt?"":`<p class="klein flauw" style="margin:-8px 0 14px">${t("standaarduitleg")}</p>`}
+      ${infoTekst("standaarduitleg")}
       ${isMagazijn()?`<label class="veld" style="margin-bottom:6px"><span>${t("pictogram")}</span></label>
         ${magBewerken()?icoonKiezer(a.icoon||"","fIcoon")
           :`<div class="icoonrij"><span class="icoonknop actief">${magIcoon(a).replace(/<\/?span[^>]*>/g,"")}</span></div>`}`:""}
-      <label class="veld"><span>${isMagazijn()?t("barcodekort"):t("barcodeoptioneel")}</span>
+      <label class="veld"><span>${isMagazijn()?t("barcodekort"):t("barcodeoptioneel")}${infoBij("barcodehulp")}</span>
         <input id="fBarcode" class="mono" value="${esc(a.barcode||"")}"
                ${magBarcodeTypen()?`oninput="app.toonBarcodeHint(this.value)"`:'readonly tabindex="-1"'}
                placeholder="${t("nogeenbarcode")}"></label>
-      <div class="melding info">${magBarcodeTypen()?t("barcodetypen"):t("barcodealleenscan")}</div>
+      ${staat.info==="barcodehulp"?`<div class="infotekst">${t("barcodehulp")}${
+        magBarcodeTypen()?" "+t("barcodetypen"):" "+t("barcodealleenscan")}</div>`:""}
       <div id="barcodeHint"></div>
       ${magBewerken()?`<div class="knoprij gelijk" style="margin-bottom:14px">
         ${(magBewerken()&&scanAan())?`<button class="knop rand" onclick="app.scanVoorArtikel()">${ico("boeken")}${t("barcodescannen")}</button>`:""}
@@ -3973,8 +4150,8 @@ function voorraadDetail(){
           :stil===0?t("vandaagnog")
           :t("algeenbeweging").replace("{n}",stil);
         return `<div class="opruimvak">
-          <div class="opschrift">${t("opruimen")}</div>
-          <p class="klein flauw">${t("opruimuitleg")}</p>
+          <div class="opschrift">${t("opruimen")}${infoBij("opruimuitleg")}</div>
+          ${infoTekst("opruimuitleg")}
           <div class="klein flauw" style="margin-bottom:10px">${wanneer}</div>
           ${a.voorraadGram>0
             ? `<div class="melding let">${t("pasleeg")} — ${t("ernogmaar")} ${kgTekst(a.voorraadGram,a)}</div>`
@@ -4021,7 +4198,7 @@ function zoekIn(w){
       if(k.indexOf(staat.scherm+":")===0) delete scrollPlek[k];
     });
     scrollVakken().forEach(v=>{ v.el.scrollTop=0; });
-    try{ window.scrollTo(0,0); }catch(e){}
+    if(!aanHetTypen()){ try{ window.scrollTo(0,0); }catch(e){} }
   }
 }
 function kiesArtikel(id){
@@ -4095,7 +4272,7 @@ function dagenStil(a){
   return Math.floor((Date.now()-laatste)/86400000);
 }
 /** Alleen de beheerder ruimt op, en alleen wat leeg is. */
-const magOpruimen=()=>!!(gebruiker&&gebruiker.rol==="admin");
+const magOpruimen=()=>!!gebruiker&&mag("verwijderen");
 
 /* Een eigen bevestigingsvenster. Het venster van de browser wordt op sommige
    toestellen geblokkeerd, en dan gebeurde er ogenschijnlijk niets. */
@@ -4268,7 +4445,6 @@ function boekDetail(){
         </div>`).join(""):`<div class="niets" style="padding:14px">${t("nietsgevonden")}</div>`}
       ${magBoeken()?`<div class="kleurerbij">
         <div class="opschrift">${t("kleurerbij")}</div>
-        <p class="klein flauw">${t("kleurerbijuitleg")}</p>
         <div class="bestelrij">
           <input id="nieuweKleur" placeholder="RAL 7016" oninput="app.toonKleur(this.value,'kleurHintKeuze')"
                  onkeydown="if(event.key==='Enter')app.kleurErbij(${artikelenOpCode(staat.keuzeCode)[0].id})">
@@ -4728,12 +4904,12 @@ function schermInboeken(){
           <label class="veld" style="margin-bottom:6px"><span>${t("pictogram")}</span></label>
           ${icoonKiezer(f.icoon||"","nIcoon")}
           ${grensBlok(f)}
-          <label class="veld"><span>${isMagazijn()?t("barcodekort"):t("barcodeveld")}</span>
+          <label class="veld"><span>${isMagazijn()?t("barcodekort"):t("barcodeveld")}${infoBij("barcodehulp")}</span>
             <input id="nBarcode" class="mono" readonly tabindex="-1" placeholder="${t("nogeenbarcode")}"
                    value="${esc(f.barcode||staat.voorstelBarcode||"")}"></label>
           ${magScannen()?`<button class="knop rand breed" style="margin-bottom:12px" onclick="app.scanVoorBarcode()">
             ${ico("boeken")}${t("barcodescannen")}</button>
-          <p class="klein flauw" style="margin-top:-4px;margin-bottom:14px">${t("barcodealleenscan")} ${t("barcodehulp")}</p>`:""}
+          ${infoTekst("barcodehulp")}`:""}
         `:`
           <label class="veld"><span>${t("soort")}</span>
             <div class="richting opKaart" style="margin-bottom:0">
@@ -4753,18 +4929,18 @@ function schermInboeken(){
               <input id="nArtnr" list="artnrs" placeholder="${t("artnrtip")}" value="${esc(f.artnr||"")}"></label>
             <label class="veld"><span>${t("kleur")}</span>
               <input id="nKleur" placeholder="RAL 7036" value="${esc(f.kleur||"")}" oninput="app.toonKleur(this.value)"></label>
-            <label class="veld"><span>${t("glansgu")}</span>
+            <label class="veld"><span>${t("glansgu")}${infoBij("guuitleg")}</span>
               <input id="nGlans" type="text" inputmode="decimal" placeholder="72" value="${esc(f.glans||"")}"></label>
           </div>
           <div id="kleurHint" class="melding info" style="display:none"></div>
-          <p class="klein flauw" style="margin-top:-6px;margin-bottom:14px">${t("guuitleg")}</p>
+          ${infoTekst("guuitleg")}
           ${grensBlok(f)}
           <label class="veld"><span>${isMagazijn()?t("barcodekort"):t("barcodeveld")}</span>
             <input id="nBarcode" class="mono" readonly tabindex="-1" placeholder="${t("nogeenbarcode")}"
                    value="${esc(f.barcode||staat.voorstelBarcode||"")}"></label>
           ${magScannen()?`<button class="knop rand breed" style="margin-bottom:12px" onclick="app.scanVoorBarcode()">
             ${ico("boeken")}${t("barcodescannen")}</button>
-          <p class="klein flauw" style="margin-top:-4px;margin-bottom:14px">${t("barcodealleenscan")} ${t("barcodehulp")}</p>`:""}
+          ${infoTekst("barcodehulp")}`:""}
         `)):`
           <div class="zoek" style="margin:0 0 12px">${ico("zoek")}
             <input id="bZoek" placeholder="${isMagazijn()?t("zoekmagazijn"):t("zoek")}" value="${esc(staat.inboekZoek||"")}"
@@ -4812,8 +4988,8 @@ function schermInboeken(){
 /** Standaardvoorraad met grenzen, bij het toevoegen van een nieuwe regel. */
 function grensBlok(f){
   const aan=f.standaard==="1";
-  return `<div class="raster2">
-    <label class="veld"><span>${t("standaardvoorraad")}</span>
+  return `${infoTekst("standaarduitleg")}<div class="raster2">
+    <label class="veld"><span>${t("standaardvoorraad")}${infoBij("standaarduitleg")}</span>
       <select id="nStandaard" onchange="app.wisselNieuwStandaard()">
         <option value="0" ${aan?"":"selected"}>${t("nee")}</option>
         <option value="1" ${aan?"selected":""}>${t("ja")}</option></select></label>
@@ -4839,6 +5015,13 @@ zoektekst(a).toLowerCase().includes(z))
       <span class="getal">${gramNaarKg(a.voorraadGram)} <span class="klein flauw" style="font-weight:500">${esc(artEenheid(a,a.voorraadGram))}</span></span>
     </div>`).join("");
 }
+/** Na het inboeken terug naar de inboeklijst, klaar voor het volgende
+ *  artikel. Bij een hele levering tik je zo door. */
+function terugNaarInboeken(){
+  ga("inboeken",{inboekArtikelId:null,inboekZoek:"",nieuwArtikel:false,
+    nieuwForm:{},voorstelBarcode:"",scanBarcode:false,scanDoel:""});
+}
+
 function zoekInboek(w){
   staat.inboekZoek=w;
   const doel=document.getElementById("inboeklijst");
@@ -4965,7 +5148,7 @@ function verwerk(){
       if(bc&&normaliseerBarcode(dubbel.barcode)!==bc){ dubbel.barcode=bc; dubbel.gewijzigd=Date.now(); gekoppeld=true; opslaan(); }
       staat.nieuwArtikel=false;
       toast(gekoppeld?t("bestondalgekoppeld"):t("bestondal"));
-      return ga("voorraad",{artikelId:dubbel.id});
+      return terugNaarInboeken();
     }
     const a={id:nieuwId(db.artikelen),code:volgendeArtikelCode(),soort:"magazijn",
       categorie,leverancier:lev,merk,naam,maat,eenheid:eenh,icoon:gekozenIcoon,barcode:bc,
@@ -4976,7 +5159,7 @@ function verwerk(){
     boek(a.id,"IN",totaal,{dozen:aantal});
     staat.nieuwForm={}; staat.voorstelBarcode="";
     toast(catNaam(categorie)+" — "+kgTekst(totaal,a));
-    return ga("voorraad",{artikelId:a.id});
+    return terugNaarInboeken();
   }
 
   if(el("nMerk")){
@@ -5021,16 +5204,15 @@ function verwerk(){
     boek(a.id,"IN",totaal,{dozen:aantal});
     staat.nieuwForm={}; staat.voorstelBarcode="";
     toast(soortNaam(soort)+" — "+kgTekst(totaal,a));
-    ga("voorraad",{artikelId:a.id});
+    terugNaarInboeken();
   }else{
     // Bestaande coating: alleen bijboeken.
     const a=artikel(staat.inboekArtikelId);
     if(!a) return toast(isMagazijn()?t("kiesartikel"):t("kiescoating"));
     if(gram!==a.standaardGram) a.standaardGram=gram;
     boek(a.id,"IN",totaal,{dozen:aantal});
-    staat.inboekZoek=""; staat.inboekArtikelId=null;
     toast(kgTekst(totaal,a)+" "+t("bijgeboekt"));
-    ga("voorraad",{artikelId:a.id});
+    terugNaarInboeken();
   }
 }
 
@@ -5040,25 +5222,27 @@ function verwerk(){
 function schermInstellingen(){
   return `<div class="tweepaneel">
         <section class="paneel scroll">
-      <div class="paneelkop"><h2>${t("gegevens")}</h2></div>
+      <div class="paneelkop"><h2>${t("gegevens")}${infoBij("opslagwaarschuwing")}</h2></div>
       <div class="paneelbody">
         ${opslagWerkt?"":`<div class="melding fout"><b>Deze omgeving staat opslaan niet toe.</b><br>
           Je kijkt waarschijnlijk in een voorbeeldvenster. Alles werkt, maar wijzigingen verdwijnen zodra
           je de pagina sluit. Download het bestand en open het lokaal om je voorraad echt te bewaren.</div>`}
-        <div class="melding let">${t("opslagwaarschuwing")}</div>
+        ${infoTekst("opslagwaarschuwing")}
         <div class="knoprij gelijk" style="margin-bottom:22px">
-          <button class="knop lime" onclick="app.exporteer()">${t("backupdownload")}</button>
-          <button class="knop rand nietBoeken" onclick="document.getElementById('importBestand').click()">${t("backupinlezen")}</button>
+          ${mag("backup")?`<button class="knop lime" onclick="app.exporteer()">${t("backupdownload")}</button>
+          <button class="knop rand nietBoeken" onclick="document.getElementById('importBestand').click()">${t("backupinlezen")}</button>`:""}
         </div>
         <input type="file" id="importBestand" accept="application/json" style="display:none" onchange="app.importeer(this)">
 
-        <h4 class="opschrift" style="margin-bottom:8px">${t("camerawerktniet")}</h4>
-        <p class="zacht klein" style="margin-bottom:22px">${t("camerahelp")}</p>
+        <h4 class="opschrift" style="margin-bottom:8px">${t("camerawerktniet")}${infoBij("camerahelp")}</h4>
+        ${infoTekst("camerahelp")}
+        <div style="height:22px"></div>
 
 
+        ${gebruiker.rol==="admin"?rechtenVak():""}
         ${gebruiker.rol==="admin"?`
-        <h4 class="opschrift" style="margin-bottom:8px">${t("herstelpunten")}</h4>
-        <div class="melding info">${t("herstelpuntenuitleg")}</div>
+        <h4 class="opschrift" style="margin-bottom:8px">${t("herstelpunten")}${infoBij("herstelpuntenuitleg")}</h4>
+        ${infoTekst("herstelpuntenuitleg")}
         ${beheerDeel().kopieDag?`<p class="klein flauw" style="margin-bottom:4px">${t("laatstekopie")}: ${esc(datumNl(beheerDeel().kopieDag))}</p>`:""}
         <p class="klein flauw" style="margin-bottom:8px">${t("backuplaatst")}: ${
           beheerDeel().laatsteBestandBackup?tijdNl(beheerDeel().laatsteBestandBackup):t("backupnooit")}</p>
@@ -5073,8 +5257,8 @@ function schermInstellingen(){
               :`<div class="niets" style="padding:10px">${t("geenkopies")}</div>`))}
         <div style="height:22px"></div>
 
-        <h4 class="opschrift" style="margin-bottom:8px">${t("scaninstelling")}</h4>
-        <div class="melding info">${t("scanuitleg")}</div>
+        <h4 class="opschrift" style="margin-bottom:8px">${t("scaninstelling")}${infoBij("scanuitleg")}</h4>
+        ${infoTekst("scanuitleg")}
         ${Object.keys(AFDELINGEN).map(k=>`
           <div class="scanrij">
             <span>${t(k==="poeder"?"poedercoating":k==="natlak"?"natlak":"magazijn")}</span>
@@ -5084,8 +5268,8 @@ function schermInstellingen(){
             </div>
           </div>`).join("")}
         <div style="height:22px"></div>`:""}
-        <h4 class="opschrift" style="margin-bottom:8px">${t("meldingen")}</h4>
-      <div class="melding info">${t("meldinguitleg")}</div>
+        <h4 class="opschrift" style="margin-bottom:8px">${t("meldingen")}${infoBij("meldinguitleg")}</h4>
+      ${infoTekst("meldinguitleg")}
       <div class="richting opKaart">
         <button class="${bestand.instellingen.geluid!==false?"actief":""}" onclick="app.zetGeluid(true)">${t("aan")}</button>
         <button class="${bestand.instellingen.geluid===false?"actief":""}" onclick="app.zetGeluid(false)">${t("uit")}</button>
@@ -5097,7 +5281,7 @@ function schermInstellingen(){
         ? `<div class="melding let">${t("meldinggeweigerd")}</div>`
         : `<button class="knop rand breed" onclick="app.vraagMeldingRecht()">${t("meldingtoestaan")}</button>`}
 
-      <h4 class="opschrift" style="margin:22px 0 8px">${t("synchroniseren")}</h4>
+      <h4 class="opschrift" style="margin:22px 0 8px">${t("synchroniseren")}${infoBij((bestand.instellingen.syncSoort||"firebase")==="firebase"?"firebaseuitleg":"eigenuitleg")}</h4>
       <div class="richting opKaart">
         <button class="${(bestand.instellingen.syncSoort||"firebase")==="firebase"?"actief":""}"
           onclick="app.zetSyncSoort('firebase')">${t("firebase")}</button>
@@ -5105,12 +5289,12 @@ function schermInstellingen(){
           onclick="app.zetSyncSoort('url')">${t("eigenadres")}</button>
       </div>
       ${(bestand.instellingen.syncSoort||"firebase")==="firebase"?`
-        <div class="melding info">${t("firebaseuitleg")}</div>
+        ${infoTekst("firebaseuitleg")}
         <label class="veld"><span>${t("firebaseadres")}</span>
           <input id="sUrl" class="mono" placeholder="https://naam-default-rtdb.europe-west1.firebasedatabase.app"
                  value="${esc(bestand.instellingen.syncUrl||"")}"></label>
       `:`
-        <div class="melding info">${t("eigenuitleg")}</div>
+        ${infoTekst("eigenuitleg")}
         <label class="veld"><span>${t("syncadres")}</span>
           <input id="sUrl" class="mono" placeholder="https://…" value="${esc(bestand.instellingen.syncUrl||"")}"></label>
         <label class="veld"><span>${t("syncsleutel")}</span>
@@ -5138,7 +5322,8 @@ function schermInstellingen(){
       </div>
 
       <h4 class="opschrift" style="margin:22px 0 8px">${t("dezeuitvoering")}</h4>
-        <div class="melding info">${t("versievan")} <b>${VERSIE}</b>.<br>${t("versieuitleg")}</div>
+        <div class="melding info">${t("versievan")} <b>${VERSIE}</b>.${infoBij("versieuitleg")}</div>
+        ${infoTekst("versieuitleg")}
       </div>
     </section>
   </div>`;
@@ -5147,11 +5332,12 @@ function schermInstellingen(){
  *  Dat is de enige kopie buiten de database. */
 const WEEK=7*86400000;
 function backupNodig(){
-  if(!gebruiker||gebruiker.rol==="afdeling") return false;
+  if(!mag("backup")) return false;
   const w=(bestand.beheer&&bestand.beheer.laatsteBestandBackup)||0;
   return Date.now()-w>WEEK;
 }
 function exporteer(){
+  if(!mag("backup")) return toast(t("magnietmeer"));
   // Alles bewaren: alle afdelingen, hun boekingen, checks, historie en instellingen.
   const blob=new Blob([JSON.stringify(bestand,null,2)],{type:"application/json"});
   const a=document.createElement("a");
@@ -5358,7 +5544,8 @@ function vulVoorbeeld(){
 /* ============================================================
    14. START
    ============================================================ */
-const app={ga,thema,zetTaal,zetScannen,laadOpnieuw,wisselWachtwoord,bevestigJa,bevestigNee,laadPoederlijst,zetKeuzeZoek,kleurErbij,toonBarcodeHint,
+const app={ga,thema,zetTaal,zetScannen,laadOpnieuw,wisselWachtwoord,wisselInfo,
+  zetRecht,herstelRechten,kiesRechtAccount,bevestigJa,bevestigNee,laadPoederlijst,zetKeuzeZoek,kleurErbij,toonBarcodeHint,
   haalKopieLijst,zetKopieTerug,verbergBackupBalk,
   toonBestelMail,sluitBestelMail,kopieerBestelling,openBestelMail,verbergLijstUitnodiging,laadMagazijnlijst,kiesIcoon,vraagMeldingRecht,zetGeluid,nieuweVraag,plaatsReactie,wisselVraagStatus,
   voegLaagToe,verwijderLaag,bestelLaag,genoegLaag,bewerkVraag,bewaarBewerking,stopBewerking,
