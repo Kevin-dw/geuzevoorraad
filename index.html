@@ -879,7 +879,7 @@ const TALEN={nl:"Nederlands",en:"English",hu:"Magyar",ro:"Română"};
 
 const TEKST={
 nl:{
- voorraad:"Voorraad", uitboeken:"Uitboeken", inboeken:"Inboeken", meer:"Meer",
+ voorraad:"Voorraad", vertalen:"Omschrijvingen vertalen", vertaaluitleg:"Omschrijvingen van magazijnartikelen staan in het Nederlands in de database — dat is ook wat er op de bestelmail naar de leverancier komt. Op het scherm worden ze vertaald. Bekende woorden en RAL-kleuren gaan vanzelf; een nieuw woord wordt één keer opgehaald en daarna bewaard, ook voor de anderen. Lukt dat niet, dan blijft het Nederlands staan.", vertalenauto:"Nieuwe woorden automatisch ophalen", vertalenautosub:"Alleen voor woorden die de app nog niet kent. Er wordt niets anders verstuurd dan dat ene woord.", vertaaltesten:"Vertaler testen", vertaaltestbezig:"Even proberen…", vertaaltestok:"De vertaler werkt", vertaaltestfout:"De vertaler is nu niet bereikbaar. De app werkt gewoon door; omschrijvingen die hij nog niet kent blijven in het Nederlands staan.", vertaalaantal:"Zelf opgehaald of verbeterd: {n}", vertaling:"Vertaling", vertalingsub:"Leeg laten is prima. Wat je hier invult geldt voor elk artikel met dezelfde omschrijving.", uitboeken:"Uitboeken", inboeken:"Inboeken", meer:"Meer",
  instellingen:"Instellingen", inhuis:"In huis", coatings:"coatings",
  zoek:"Zoek merk, type, RAL of glansgraad",
 
@@ -989,7 +989,7 @@ nl:{
  kg:"kg", dozen:"dozen", doos:"doos"
 },
 en:{
- voorraad:"Stock", uitboeken:"Book out", inboeken:"Book in", meer:"More",
+ voorraad:"Stock", vertalen:"Translate descriptions", vertaaluitleg:"Warehouse item descriptions are stored in Dutch — that is also what goes on the order email to the supplier. On screen they are translated. Known words and RAL colours are handled automatically; a new word is fetched once and then kept, for everyone. If that fails, the Dutch stays.", vertalenauto:"Fetch new words automatically", vertalenautosub:"Only for words the app does not know yet. Nothing but that one word is sent.", vertaaltesten:"Test the translator", vertaaltestbezig:"Trying…", vertaaltestok:"The translator works", vertaaltestfout:"The translator cannot be reached right now. The app carries on; descriptions it does not know yet stay in Dutch.", vertaalaantal:"Fetched or corrected: {n}", vertaling:"Translation", vertalingsub:"Leaving it empty is fine. What you enter here applies to every item with the same description.", uitboeken:"Book out", inboeken:"Book in", meer:"More",
  instellingen:"Settings", inhuis:"In stock", coatings:"coatings",
  zoek:"Search brand, type, RAL or gloss",
 
@@ -1099,7 +1099,7 @@ en:{
  kg:"kg", dozen:"boxes", doos:"box"
 },
 hu:{
- voorraad:"Készlet", uitboeken:"Kivételezés", inboeken:"Bevételezés", meer:"Több",
+ voorraad:"Készlet", vertalen:"Megnevezések fordítása", vertaaluitleg:"A raktári cikkek megnevezése hollandul van eltárolva — ez kerül a beszállítónak küldött rendelésre is. A képernyőn lefordítva jelenik meg. Az ismert szavak és a RAL-színek automatikusan mennek; egy új szót egyszer lekér az alkalmazás, és utána megjegyzi, mindenki számára. Ha ez nem sikerül, marad a holland.", vertalenauto:"Új szavak automatikus lekérése", vertalenautosub:"Csak olyan szavakra, amelyeket az alkalmazás még nem ismer. Csak az az egy szó kerül elküldésre.", vertaaltesten:"Fordító tesztelése", vertaaltestbezig:"Próbálkozás…", vertaaltestok:"A fordító működik", vertaaltestfout:"A fordító jelenleg nem érhető el. Az alkalmazás tovább működik; az ismeretlen megnevezések hollandul maradnak.", vertaalaantal:"Lekérve vagy javítva: {n}", vertaling:"Fordítás", vertalingsub:"Üresen is hagyhatja. Amit ide ír, az minden azonos megnevezésű cikkre érvényes.", uitboeken:"Kivételezés", inboeken:"Bevételezés", meer:"Több",
  instellingen:"Beállítások", inhuis:"Készleten", coatings:"bevonat",
  zoek:"Keresés: gyártó, típus, RAL vagy fényesség",
 
@@ -1209,7 +1209,7 @@ hu:{
  kg:"kg", dozen:"doboz", doos:"doboz"
 },
 ro:{
- voorraad:"Stoc", uitboeken:"Scădere", inboeken:"Recepție", meer:"Mai mult",
+ voorraad:"Stoc", vertalen:"Traducerea descrierilor", vertaaluitleg:"Descrierile articolelor de magazie sunt păstrate în neerlandeză — asta ajunge și în e-mailul de comandă către furnizor. Pe ecran sunt traduse. Cuvintele cunoscute și culorile RAL merg automat; un cuvânt nou este preluat o singură dată și apoi păstrat, pentru toți. Dacă nu reușește, rămâne neerlandeza.", vertalenauto:"Preia automat cuvintele noi", vertalenautosub:"Doar pentru cuvinte pe care aplicația nu le cunoaște încă. Nu se trimite nimic altceva decât acel cuvânt.", vertaaltesten:"Testează traducătorul", vertaaltestbezig:"Se încearcă…", vertaaltestok:"Traducătorul funcționează", vertaaltestfout:"Traducătorul nu este accesibil acum. Aplicația merge mai departe; descrierile necunoscute rămân în neerlandeză.", vertaalaantal:"Preluate sau corectate: {n}", vertaling:"Traducere", vertalingsub:"Poți lăsa gol. Ce scrii aici se aplică fiecărui articol cu aceeași descriere.", uitboeken:"Scădere", inboeken:"Recepție", meer:"Mai mult",
  instellingen:"Setări", inhuis:"În stoc", coatings:"vopsele",
  zoek:"Caută marcă, tip, RAL sau luciu",
 
@@ -1446,22 +1446,225 @@ const MAG_CATNAAM={
    "TD/Onderhoud":"Întreținere","Kantoorartikelen":"Articole de birou","Afvalstromen":"Deșeuri",
    "Transport":"Transport","Overig":"Altele"}
 };
-const catNaam=x=>(MAG_CATNAAM[huidigeTaal()]||{})[x]||x;
+/* Categorieën die in de vaste lijst staan hebben een eigen vertaling. Een
+   eigen categorie die iemand zelf heeft ingevoerd gaat langs dezelfde weg als
+   de omschrijvingen: woordenlijst, eerder opgehaald, of anders Nederlands. */
+const catNaam=x=>(MAG_CATNAAM[huidigeTaal()]||{})[x]||woordVertaald(x,false);
+const catNaamStil=x=>(MAG_CATNAAM[huidigeTaal()]||{})[x]||woordVertaald(x,true);
 
 const MAG_EENHEID=["stuk","paar","doos","rol","pak","tube","kan","pot","blister","zakje","set","meter","liter","kg"];
 const MAG_MEERVOUD={
  nl:{"pak":"pakken","tube":"tubes","kan":"kannen","pot":"potten","blister":"blisters","zakje":"zakjes","stuk":"stuks","paar":"paar","doos":"dozen","rol":"rollen","set":"sets","meter":"meter","liter":"liter","kg":"kg"},
- en:{"pak":"pack","tube":"tube","kan":"can","pot":"tub","blister":"blister","zakje":"bag","stuk":"pieces","paar":"pairs","doos":"boxes","rol":"rolls","set":"sets","meter":"metres","liter":"litres","kg":"kg"},
- hu:{},
- ro:{"pak":"pachet","tube":"tub","kan":"bidon","pot":"găleată","blister":"blister","zakje":"pungă","stuk":"bucăți","paar":"perechi","doos":"cutii","rol":"role","set":"seturi","meter":"metri","liter":"litri","kg":"kg"}
+ en:{"pak":"packs","tube":"tubes","kan":"cans","pot":"tubs","blister":"blisters","zakje":"bags","stuk":"pieces","paar":"pairs","doos":"boxes","rol":"rolls","set":"sets","meter":"metres","liter":"litres","kg":"kg"},
+ hu:{},   // het Hongaars gebruikt na een getal het enkelvoud; de naam hieronder klopt dan al
+ ro:{"pak":"pachete","tube":"tuburi","kan":"bidoane","pot":"găleți","blister":"blistere","zakje":"pungi","stuk":"bucăți","paar":"perechi","doos":"cutii","rol":"role","set":"seturi","meter":"metri","liter":"litri","kg":"kg"}
 };
 const MAG_EENHNAAM={
  nl:{},
- en:{"stuk":"piece","paar":"pair","doos":"box","rol":"roll","set":"set","meter":"metre","liter":"litre","kg":"kg"},
+ en:{"stuk":"piece","paar":"pair","doos":"box","rol":"roll","set":"set","meter":"metre","liter":"litre","kg":"kg",
+   "pak":"pack","tube":"tube","kan":"can","pot":"tub","blister":"blister","zakje":"bag"},
  hu:{"pak":"csomag","tube":"tubus","kan":"kanna","pot":"vödör","blister":"buborékcsomag","zakje":"zacskó","stuk":"darab","paar":"pár","doos":"doboz","rol":"tekercs","set":"készlet","meter":"méter","liter":"liter","kg":"kg"},
- ro:{"stuk":"bucată","paar":"pereche","doos":"cutie","rol":"rolă","set":"set","meter":"metru","liter":"litru","kg":"kg"}
+ ro:{"stuk":"bucată","paar":"pereche","doos":"cutie","rol":"rolă","set":"set","meter":"metru","liter":"litru","kg":"kg",
+   "pak":"pachet","tube":"tub","kan":"bidon","pot":"găleată","blister":"blister","zakje":"pungă"}
 };
 const eenhNaam=x=>(MAG_EENHNAAM[huidigeTaal()]||{})[x]||x;
+
+/* ============================================================
+   OMSCHRIJVINGEN VAN MAGAZIJNARTIKELEN
+   De omschrijving wordt in het Nederlands bewaard — dat is wat er op de
+   bestelmail naar de leverancier moet staan. Bij het tonen wordt hij vertaald:
+   eerst de vaste woordenlijst hieronder, dan wat er eerder is opgehaald of met
+   de hand verbeterd, en anders blijft het Nederlands gewoon staan.
+   ============================================================ */
+const OMS_WOORDEN=(function(){
+  const t={};
+  for(const r of ("Afbraamschijf=Grinding disc|Nagyolótárcsa|Disc de degroșare;Afbreekmes=Snap-off knife|Törhető pengés kés|Cutter cu lamă detașabilă;Aluminiumfolie=Aluminium foil|Alufólia|Folie de aluminiu;Binddraad=Tie wire|Kötöződrót|Sârmă de legat;Blauw zeil=Blue tarpaulin|Kék ponyva|Prelată albastră;Borgveer=Locking spring|Rögzítőrugó|Arc de siguranță;Controle afgekeurd tape=Rejected inspection tape|Ellenőrzés elutasítva szalag|Bandă control respins;Crepe tape 20mm=Masking tape 20mm|Krepp szalag 20mm|Bandă crep 20mm;Crepe tape 25mm=Masking tape 25mm|Krepp szalag 25mm|Bandă crep 25mm;Crepe tape 50mm=Masking tape 50mm|Krepp szalag 50mm|Bandă crep 50mm;Crepe tape 75mm=Masking tape 75mm|Krepp szalag 75mm|Bandă crep 75mm;Deltasling banden=Deltasling straps|Deltasling hevederek|Chingi Deltasling;Deltasling hijsbanden=Deltasling lifting slings|Deltasling emelőhevederek|Chingi de ridicare Deltasling;Dodemansknop=Dead man's switch|Holtember-kapcsoló|Buton de siguranță;Dubbelzijdig tape=Double-sided tape|Kétoldalas ragasztószalag|Bandă dublu adezivă;Fijne lijn tape=Fine line tape|Finom vonalú szalag|Bandă linie fină;Foam=Foam|Hab|Spumă;Folie=Film|Fólia|Folie;GEMA smeermiddel=GEMA lubricant|GEMA kenőanyag|Lubrifiant GEMA;Gerson Filterpads=Gerson filter pads|Gerson szűrőbetétek|Filtre Gerson;Gesp=Buckle|Csat|Cataramă;Handdoekjes=Paper towels|Papírtörlő|Prosoape de hârtie;Handschoen BullFlex=BullFlex glove|BullFlex kesztyű|Mănușă BullFlex;Handtacker=Hand stapler|Kézi tűzőgép|Capsator manual;Handvat=Handle|Fogantyú|Mâner;Haspels=Reels|Tömlődobok|Tamburi;Heat resistant tape=Heat resistant tape|Hőálló szalag|Bandă termorezistentă;High build primer filler White=High build primer filler white|Vastagrétegű alapozó fehér|Grund de umplere alb;Honeywell Mask=Honeywell mask|Honeywell maszk|Mască Honeywell;Honeywell Mask Ruit=Honeywell mask visor|Honeywell maszk ablak|Vizor mască Honeywell;Hoofddoek=Head cover|Fejkendő|Bandană;Ijzerdraad=Iron wire|Vasdrót|Sârmă de fier;Kit Natlak=Wet paint sealant|Nedves festék tömítő|Chit vopsea umedă;Kit Poedercoaten=Powder coating sealant|Porszórás tömítő|Chit pulbere;Kitspuit=Caulking gun|Kinyomópisztoly|Pistol de silicon;Klauwkoppeling=Claw coupling|Körmös csatlakozó|Cuplaj cu gheare;Kleefdoekjes=Tack cloths|Ragadós kendő|Lavete adezive;Kleine verfrolhouders=Small roller frames|Kis festőhenger-tartó|Suporturi mici pentru trafalet;Kniebeschermers=Knee pads|Térdvédő|Genunchiere;Koffiebekers=Coffee cups|Kávéspohár|Pahare de cafea;Koolstoffilter=Carbon filter|Szénszűrő|Filtru de carbon;Kurkblokjes=Cork blocks|Parafa tömb|Blocuri de plută;Kwast 1 inch=Brush 1 inch|Ecset 1 coll|Pensulă 1 inch;Kwast 1,5 inch=Brush 1.5 inch|Ecset 1,5 coll|Pensulă 1,5 inch;Kwast 2 inch=Brush 2 inch|Ecset 2 coll|Pensulă 2 inch;Kwast 2,5 inch=Brush 2.5 inch|Ecset 2,5 coll|Pensulă 2,5 inch;Label=Label|Címke|Etichetă;Lamellenschijf=Flap disc|Lamellás csiszolótárcsa|Disc lamelar;Lasdraad=Welding wire|Hegesztőhuzal|Sârmă de sudură;Lashandschoen=Welding glove|Hegesztőkesztyű|Mănușă de sudură;Latex handschoenen=Latex gloves|Latex kesztyű|Mănuși din latex;Lichtplaat=Light panel|Világítópanel|Panou luminos;Luchtpistool=Air gun|Levegőpisztoly|Pistol de aer;Marker=Marker|Filctoll|Marker;Maskeerfolie=Masking film|Maszkoló fólia|Folie de mascare;Mengbekers=Mixing cups|Keverőpohár|Pahare de amestec;MiniVerfrol=Mini paint roller|Mini festőhenger|Mini trafalet;Moldex Stofmasker=Moldex dust mask|Moldex pormaszk|Mască de praf Moldex;Naalden=Needles|Tűk|Ace;Nappa handschoenen=Nappa gloves|Nappa kesztyű|Mănuși Nappa;Nietjes=Staples|Tűzőkapcsok|Capse;Not conform tape=Non-conform tape|Nem megfelelő szalag|Bandă neconformă;Oogbout=Eye bolt|Szemescsavar|Șurub cu ochi;Oordopjes=Ear plugs|Füldugó|Dopuri de urechi;Overalls=Overalls|Overál|Salopete;PTFE Thread Sealing tape 25mm=PTFE thread sealing tape 25mm|PTFE menettömítő szalag 25mm|Bandă PTFE etanșare filet 25mm;Penseel 10=Artist brush 10|Ecset 10|Pensulă 10;Penseel 4=Artist brush 4|Ecset 4|Pensulă 4;Penseel 6=Artist brush 6|Ecset 6|Pensulă 6;Penseel 8=Artist brush 8|Ecset 8|Pensulă 8;Penseel Plat=Flat artist brush|Lapos ecset|Pensulă plată;Plamuurrubber=Filler spreader|Gletteló gumi|Șpaclu de cauciuc;Plasticzak=Plastic bag|Műanyag zsák|Sac de plastic;Poetsdoeken=Cleaning cloths|Törlőkendő|Lavete de curățat;Polyester plamuur=Polyester filler|Poliészter kitt|Chit poliesteric;Polyester plamuur verharder=Polyester filler hardener|Poliészter kitt edző|Întăritor chit poliesteric;Print Papier=Printer paper|Nyomtatópapír|Hârtie de imprimantă;Rem reininger=Brake cleaner|Féktisztító|Soluție de curățat frâne;Reserve messen 18mm=Spare blades 18mm|Tartalék pengék 18mm|Lame de rezervă 18mm;Reserve messen 9mm=Spare blades 9mm|Tartalék pengék 9mm|Lame de rezervă 9mm;Reserve schildersmes=Spare painter's blade|Tartalék festőpenge|Lamă de rezervă pentru zugrav;Rodac schuurmachine=Rodac sander|Rodac csiszológép|Șlefuitor Rodac;Rolmaat=Tape measure|Mérőszalag|Ruletă;Rubber handschoen groen=Rubber glove green|Gumikesztyű zöld|Mănușă de cauciuc verde;Rubber handschoen oranje=Rubber glove orange|Gumikesztyű narancs|Mănușă de cauciuc portocalie;Rubber verpakken=Packing rubber|Csomagoló gumi|Cauciuc de ambalare;SINew Straalhelm Onderdelen=SINew blasting helmet parts|SINew szórósisak alkatrészek|Piese cască de sablare SINew;Schildersmes stanley=Stanley painter's knife|Stanley festőkés|Cuțit de zugrav Stanley;Schuurband 10x330=Sanding belt 10x330|Csiszolószalag 10x330|Bandă abrazivă 10x330;Schuurpad=Sanding pad|Csiszolópárna|Burete abraziv;Schuurpapier Ø150mm=Sandpaper Ø150mm|Csiszolópapír Ø150mm|Hârtie abrazivă Ø150mm;Schuurpapier Ø75mm=Sandpaper Ø75mm|Csiszolópapír Ø75mm|Hârtie abrazivă Ø75mm;Schuurpapierr Ø150mm=Sandpaper Ø150mm|Csiszolópapír Ø150mm|Hârtie abrazivă Ø150mm;Schuurschijf=Sanding disc|Csiszolótárcsa|Disc abraziv;Scotch Brite op rol=Scotch Brite on roll|Scotch Brite tekercsben|Scotch Brite pe rolă;Scotch Brite op schuurschijf=Scotch Brite disc|Scotch Brite tárcsán|Scotch Brite pe disc;Slangklemmen=Hose clamps|Tömlőbilincs|Coliere de furtun;Slijpschijf=Cutting disc|Vágótárcsa|Disc de debitat;Smeervet EP 2=Grease EP 2|Kenőzsír EP 2|Vaselină EP 2;Spanband=Ratchet strap|Rögzítőheveder|Chingă cu clichet;Spuitmasker L=Spray mask L|Festőmaszk L|Mască de vopsit L;Spuitmasker M=Spray mask M|Festőmaszk M|Mască de vopsit M;Spuitoverall 52=Spray overall 52|Festőoverál 52|Salopetă de vopsit 52;Spuitoverall 56=Spray overall 56|Festőoverál 56|Salopetă de vopsit 56;Spuitoverall 62=Spray overall 62|Festőoverál 62|Salopetă de vopsit 62;Stanley Afbreekmes=Stanley snap-off knife|Stanley törhető pengés kés|Cutter Stanley;Steekmessen=Fixed-blade knives|Fix pengés kések|Cuțite cu lamă fixă;Straal tape 50mm=Blasting tape 50mm|Szórószalag 50mm|Bandă de sablare 50mm;Straalkiel=Blasting smock|Szóróköpeny|Halat de sablare;Straalkiel Onderdelen=Blasting smock parts|Szóróköpeny alkatrészek|Piese halat de sablare;Straallaarzen=Blasting boots|Szórócsizma|Cizme de sablare;Straalrubbers=Blasting rubbers|Szórógumi|Cauciucuri de sablare;Straaltape 75mm=Blasting tape 75mm|Szórószalag 75mm|Bandă de sablare 75mm;Teflon tape=Teflon tape|Teflonszalag|Bandă de teflon;Tetra Tools hijsbanden=Tetra Tools lifting slings|Tetra Tools emelőheveder|Chingi de ridicare Tetra Tools;Tiewraps=Cable ties|Kábelkötegelő|Coliere de cablu;Touch up doosje=Touch-up box|Javítókészlet doboz|Cutie de retuș;Touch up verfblik 1L=Touch-up paint tin 1L|Javítófesték doboz 1L|Cutie vopsea retuș 1L;Touch up verharder blik 1L=Touch-up hardener tin 1L|Javító edző doboz 1L|Cutie întăritor retuș 1L;Touch-up kwast=Touch-up brush|Javító ecset|Pensulă de retuș;Touch-up schuurpapier=Touch-up sandpaper|Javító csiszolópapír|Hârtie abrazivă de retuș;Touch-up verfblik 150ml=Touch-up paint tin 150ml|Javítófesték doboz 150ml|Cutie vopsea retuș 150ml;Touch-up verharder blik 150ml=Touch-up hardener tin 150ml|Javító edző doboz 150ml|Cutie întăritor retuș 150ml;Touch-up verharder blik 500ml=Touch-up hardener tin 500ml|Javító edző doboz 500ml|Cutie întăritor retuș 500ml;Turbomix roarstok=Turbomix stirring rod|Turbomix keverőrúd|Tijă de amestec Turbomix;Uvex blue safety glasses=Uvex blue safety glasses|Uvex kék védőszemüveg|Ochelari de protecție Uvex albaștri;Uvex orange safety glasses=Uvex orange safety glasses|Uvex narancs védőszemüveg|Ochelari de protecție Uvex portocalii;Verfzeef=Paint strainer|Festékszűrő|Sită de vopsea;Vetpatroon=Grease cartridge|Zsírpatron|Cartuș de vaselină;Vloer belijning=Floor marking|Padlójelölés|Marcaj pardoseală;Vloerbelijning=Floor marking|Padlójelölés|Marcaj pardoseală;Wc papier=Toilet paper|WC-papír|Hârtie igienică;Werkhandschoenen=Work gloves|Munkakesztyű|Mănuși de lucru;Werkplaats rol=Workshop roll|Műhelytekercs|Rolă de atelier;Winter handschoen=Winter glove|Téli kesztyű|Mănușă de iarnă;Wit Band=White tape|Fehér szalag|Bandă albă;Zeep Geel=Soap yellow|Sárga szappan|Săpun galben;Zeep Rood=Soap red|Piros szappan|Săpun roșu;Zekeringen=Fuses|Biztosítékok|Siguranțe;Zelftappers=Self-tapping screws|Önmetsző csavarok|Șuruburi autofiletante;Zwaar werk handschoenen=Heavy duty gloves|Nehéz munkakesztyű|Mănuși de lucru rezistente;clips witband=White tape clips|Fehér szalag klipsz|Clipsuri bandă albă;werpschoepen berta=Berta throwing blades|Berta szórólapátok|Palete Berta;Afplakmateriaal=Masking materials|Maszkoló anyagok|Materiale de mascare;Kwasten & rollers=Brushes & rollers|Ecsetek és hengerek|Pensule și trafalete;Kwasten en rollers=Brushes & rollers|Ecsetek és hengerek|Pensule și trafalete;Ophangmateriaal=Hanging materials|Felfüggesztő anyagok|Materiale de agățare;Persoonlijke bescherming=Personal protection|Egyéni védőeszközök|Protecție personală;Gereedschap=Tools|Szerszámok|Scule;Verbruiksmateriaal=Consumables|Fogyóeszközök|Consumabile;Schuurmateriaal=Abrasives|Csiszolóanyagok|Abrazive;Straalmateriaal=Blasting materials|Szóróanyagok|Materiale de sablare;Reinigingsmiddelen=Cleaning agents|Tisztítószerek|Agenți de curățare;Bevestigingsmateriaal=Fasteners|Rögzítőelemek|Elemente de fixare;Verpakkingsmateriaal=Packaging materials|Csomagolóanyagok|Materiale de ambalare;Afplaktape hittebestendig=Heat resistant masking tape|Hőálló maszkolószalag|Bandă de mascare termorezistentă;Afplaktape=Masking tape|Maszkolószalag|Bandă de mascare;Blokkwast=Block brush|Blokkecset|Pensulă bloc;Blokkwast 60 mm=Block brush 60 mm|Blokkecset 60 mm|Pensulă bloc 60 mm;Blokkwast 40 mm=Block brush 40 mm|Blokkecset 40 mm|Pensulă bloc 40 mm;Blokkwast 50 mm=Block brush 50 mm|Blokkecset 50 mm|Pensulă bloc 50 mm;Vachtroller=Fleece roller|Szőrmehenger|Trafalet cu blană;Verfroller=Paint roller|Festőhenger|Trafalet;Rollerset=Roller set|Hengerkészlet|Set de trafalete;Ophanghaak S-vorm=S-hook|S-horog|Cârlig în S;Ophanghaak=Hanging hook|Akasztóhorog|Cârlig de agățare;Ophangdraad=Hanging wire|Felfüggesztő drót|Sârmă de agățare;Stofmasker FFP2=Dust mask FFP2|FFP2 pormaszk|Mască de praf FFP2;Stofmasker FFP3=Dust mask FFP3|FFP3 pormaszk|Mască de praf FFP3;Stofmasker=Dust mask|Pormaszk|Mască de praf;Veiligheidsbril=Safety glasses|Védőszemüveg|Ochelari de protecție;Gehoorbescherming=Hearing protection|Hallásvédő|Protecție auditivă;Veiligheidsschoenen=Safety shoes|Munkavédelmi cipő|Încălțăminte de protecție;Wegwerpoverall=Disposable overall|Eldobható overál|Salopetă de unică folosință;Maskeertape=Masking tape|Maszkolószalag|Bandă de mascare;Maskeerdop=Masking cap|Maszkoló sapka|Capac de mascare;Maskeerplug=Masking plug|Maszkoló dugó|Dop de mascare;Hittebestendig tape=Heat resistant tape|Hőálló szalag|Bandă termorezistentă;Krimpkous=Heat shrink sleeve|Zsugorcső|Tub termocontractabil;Schuurvlies=Abrasive fleece|Csiszolófilc|Material abraziv nețesut;Schuurblok=Sanding block|Csiszolótömb|Bloc de șlefuit;Straalgrit=Blasting grit|Szórószemcse|Granule de sablare;Straalzand=Blasting sand|Szóróhomok|Nisip de sablare;Ontvetter=Degreaser|Zsírtalanító|Degresant;Thinner=Thinner|Hígító|Diluant;Verdunner=Thinner|Hígító|Diluant;Verharder=Hardener|Edző|Întăritor;Primer=Primer|Alapozó|Grund;Aflak=Topcoat|Fedőlakk|Strat final;Roerstok=Stirring stick|Keverőpálca|Băț de amestec;Mengbeker=Mixing cup|Keverőpohár|Pahar de amestec;Trechter=Funnel|Tölcsér|Pâlnie;Spuitpistool=Spray gun|Szórópisztoly|Pistol de vopsit;Spuitnaald=Spray needle|Szórótű|Ac de pulverizare;Luchtslang=Air hose|Levegőtömlő|Furtun de aer;Snelkoppeling=Quick coupling|Gyorscsatlakozó|Cuplaj rapid;Handveger=Hand brush|Kézi seprű|Mătură de mână;Stofzuigerzak=Vacuum bag|Porzsák|Sac de aspirator;Vuilniszak=Rubbish bag|Szemeteszsák|Sac de gunoi;Werkbroek=Work trousers|Munkanadrág|Pantaloni de lucru;Werkjas=Work jacket|Munkakabát|Jachetă de lucru;Spuitmond=Spray nozzle|Szórófúvóka|Duză de pulverizare;Spuitmonden=Spray nozzles|Szórófúvókák|Duze de pulverizare;Nozzle=Nozzle|Fúvóka|Duză;Luchtkap=Air cap|Levegősapka|Capac de aer;Naald=Needle|Tű|Ac;Verfpot=Paint pot|Festékes edény|Recipient de vopsea;Verfbeker=Paint cup|Festékpohár|Pahar de vopsea;Verfrol=Paint roller|Festőhenger|Trafalet;Rollerhoes=Roller sleeve|Hengerbevonat|Manșon de trafalet;Rollerbeugel=Roller frame|Hengertartó|Suport de trafalet;Afplakpapier=Masking paper|Maszkolópapír|Hârtie de mascare;Plakband=Adhesive tape|Ragasztószalag|Bandă adezivă;Spuitbus=Spray can|Spray doboz|Spray;Drukbeker=Pressure cup|Nyomáspohár|Pahar sub presiune;Membraan=Diaphragm|Membrán|Membrană;Pakking=Gasket|Tömítés|Garnitură;O-ring=O-ring|O-gyűrű|Inel O;Filterelement=Filter element|Szűrőbetét|Element de filtrare;Luchtfilter=Air filter|Levegőszűrő|Filtru de aer;Waterafscheider=Water separator|Vízleválasztó|Separator de apă;Drukregelaar=Pressure regulator|Nyomásszabályozó|Regulator de presiune;Manometer=Pressure gauge|Nyomásmérő|Manometru;Verfpomp=Paint pump|Festékszivattyú|Pompă de vopsea;Roerwerk=Stirrer|Keverőmű|Agitator;Viscositeitsbeker=Viscosity cup|Viszkozitásmérő pohár|Cupă de vâscozitate;Laagdiktemeter=Coating thickness gauge|Rétegvastagságmérő|Aparat de măsurat grosimea stratului;Poeder=Powder|Por|Pulbere;Poederbak=Powder hopper|Portartály|Rezervor de pulbere;Poederslang=Powder hose|Portömlő|Furtun de pulbere;Injector=Injector|Injektor|Injector;Elektrode=Electrode|Elektróda|Electrod;Zeef=Sieve|Szita|Sită;Ophanghaken=Hanging hooks|Akasztóhorgok|Cârlige de agățare;Ophangrek=Hanging rack|Akasztóállvány|Raft de agățare;Aardingsklem=Earth clamp|Földelőcsipesz|Clemă de împământare;Aardkabel=Earth cable|Földelőkábel|Cablu de împământare;Siliconenkap=Silicone cap|Szilikon sapka|Capac din silicon;Siliconenplug=Silicone plug|Szilikon dugó|Dop din silicon;Straalmiddel=Blasting media|Szóróanyag|Material de sablare;Staalgrit=Steel grit|Acélszemcse|Granule de oțel;Staalkorrel=Steel shot|Acél alice|Alice de oțel;Glasparels=Glass beads|Üveggyöngy|Perle de sticlă;Korund=Corundum|Korund|Corindon;Straalhelm=Blasting helmet|Szórósisak|Cască de sablare;Straalpak=Blasting suit|Szóróruha|Costum de sablare;Straalhandschoenen=Blasting gloves|Szórókesztyű|Mănuși de sablare;Straalslang=Blasting hose|Szórótömlő|Furtun de sablare;Straalmond=Blasting nozzle|Szórófúvóka|Duză de sablare;Straalketel=Blast pot|Szórótartály|Rezervor de sablare;Ademluchtfilter=Breathing air filter|Légzőlevegő-szűrő|Filtru de aer respirabil;Ademluchtslang=Breathing air hose|Légzőlevegő-tömlő|Furtun de aer respirabil;Straalbril=Blasting goggles|Szórószemüveg|Ochelari de sablare;Vizier=Visor|Arcvédő|Vizieră;Voorzetruit=Protective lens|Előtétüveg|Lentilă de protecție;Doorslijpschijf=Cutting disc|Vágótárcsa|Disc de tăiere;Staalborstel=Wire brush|Drótkefe|Perie de sârmă;Komstaalborstel=Cup wire brush|Fazékkefe|Perie oală de sârmă;Vijl=File|Reszelő|Pilă;Schuurspons=Sanding sponge|Csiszolószivacs|Burete de șlefuit;Bout=Bolt|Csavar|Șurub;Moer=Nut|Anya|Piuliță;Veerring=Spring washer|Rugós alátét|Șaibă elastică;Sluitring=Washer|Alátét|Șaibă;Schroef=Screw|Csavar|Șurub;Draadeind=Threaded rod|Menetes szár|Tijă filetată;Steeksleutel=Open-end spanner|Villáskulcs|Cheie fixă;Ringsleutel=Ring spanner|Csillagkulcs|Cheie inelară;Dopsleutel=Socket spanner|Dugókulcs|Cheie tubulară;Inbussleutel=Allen key|Imbuszkulcs|Cheie imbus;Schroevendraaier=Screwdriver|Csavarhúzó|Șurubelniță;Tang=Pliers|Fogó|Clește;Kniptang=Cutting pliers|Csípőfogó|Clește de tăiat;Waterpomptang=Water pump pliers|Vízpumpafogó|Clește papagal;Hamer=Hammer|Kalapács|Ciocan;Beitel=Chisel|Véső|Daltă;Boor=Drill bit|Fúrószár|Burghiu;Boormachine=Drill|Fúrógép|Mașină de găurit;Accuboormachine=Cordless drill|Akkus fúró|Mașină de găurit cu acumulator;Haakse slijper=Angle grinder|Sarokcsiszoló|Polizor unghiular;Verlengsnoer=Extension lead|Hosszabbító|Prelungitor;Werklamp=Work light|Munkalámpa|Lampă de lucru;Ladder=Ladder|Létra|Scară;Handschoenen=Gloves|Kesztyű|Mănuși;Veiligheidshandschoenen=Safety gloves|Védőkesztyű|Mănuși de protecție;Nitril handschoenen=Nitrile gloves|Nitril kesztyű|Mănuși din nitril;Veiligheidshelm=Safety helmet|Védősisak|Cască de protecție;Gelaatsscherm=Face shield|Arcvédő pajzs|Vizieră de protecție;Oorkappen=Ear defenders|Fültok|Antifoane;Reflectievest=High-vis vest|Láthatósági mellény|Vestă reflectorizantă;Valbeveiliging=Fall protection|Leesésvédelem|Protecție la cădere;Harnas=Safety harness|Beülőheveder|Ham de siguranță;Filterbus=Filter cartridge|Szűrőbetét|Cartuș de filtru;Stoffilter=Dust filter|Porszűrő|Filtru de praf;Voorfilter=Pre-filter|Előszűrő|Prefiltru;Poetsdoek=Cleaning cloth|Törlőkendő|Lavetă;Poetspapier=Cleaning paper|Törlőpapír|Hârtie de curățat;Handreiniger=Hand cleaner|Kéztisztító|Soluție de curățat mâini;Allesreiniger=All-purpose cleaner|Általános tisztítószer|Detergent universal;Bezem=Broom|Seprű|Mătură;Dweil=Mop|Felmosó|Mop;Emmer=Bucket|Vödör|Găleată;Schep=Shovel|Lapát|Lopată;Pallet=Pallet|Raklap|Palet;Krimpfolie=Shrink wrap|Zsugorfólia|Folie termocontractabilă;Wikkelfolie=Stretch wrap|Sztreccsfólia|Folie stretch;Noppenfolie=Bubble wrap|Buborékfólia|Folie cu bule;Karton=Cardboard|Karton|Carton;Etiket=Label|Címke|Etichetă;Stickers=Stickers|Matricák|Autocolante;Pallethoes=Pallet cover|Raklaphuzat|Husă de palet;Hoekbeschermer=Corner protector|Sarokvédő|Protecție de colț;Pen=Pen|Toll|Pix;Potlood=Pencil|Ceruza|Creion;Notitieblok=Notepad|Jegyzettömb|Carnețel;Ordner=Binder|Irattartó|Biblioraft;Printerinkt=Printer ink|Nyomtatófesték|Cerneală de imprimantă;Toner=Toner|Toner|Toner;Schaar=Scissors|Olló|Foarfecă;Perforator=Hole punch|Lyukasztó|Perforator;Batterijen=Batteries|Elemek|Baterii;Smeerolie=Lubricating oil|Kenőolaj|Ulei de ungere;Smeerspray=Lubricant spray|Kenőspray|Spray lubrifiant;Kruipolie=Penetrating oil|Kúszóolaj|Ulei penetrant;Laselektrode=Welding electrode|Hegesztőelektróda|Electrod de sudură;Lasmasker=Welding mask|Hegesztőpajzs|Mască de sudură;Gasfles=Gas cylinder|Gázpalack|Butelie de gaz;Perslucht=Compressed air|Sűrített levegő|Aer comprimat;Persluchtslang=Compressed air hose|Sűrítettlevegő-tömlő|Furtun de aer comprimat;Slanghaspel=Hose reel|Tömlődob|Tambur de furtun;Koppelstuk=Connector|Csatlakozóelem|Piesă de legătură;Nippel=Nipple|Közcsavar|Niplu;Kraan=Tap|Csap|Robinet;Afsluiter=Shut-off valve|Elzárószelep|Robinet de închidere;Ventiel=Valve|Szelep|Supapă;Lager=Bearing|Csapágy|Rulment;Veer=Spring|Rugó|Arc;Riem=Belt|Szíj|Curea;Ketting=Chain|Lánc|Lanț;Wiel=Wheel|Kerék|Roată;Zwenkwiel=Castor|Forgógörgő|Rotilă pivotantă;Kabelbinder=Cable tie|Kábelkötegelő|Colier de cablu;Isolatieband=Insulating tape|Szigetelőszalag|Bandă izolatoare;Stekker=Plug|Dugó|Ștecher;Contactdoos=Socket|Aljzat|Priză;Zekering=Fuse|Biztosíték|Siguranță;Lamp=Lamp|Lámpa|Lampă;Tl-buis=Fluorescent tube|Fénycső|Tub fluorescent;Ledlamp=LED lamp|LED lámpa|Lampă LED;Thermometer=Thermometer|Hőmérő|Termometru;Vochtmeter=Moisture meter|Nedvességmérő|Higrometru;Ruwheidsmeter=Roughness gauge|Érdességmérő|Rugozimetru;Kalibratieplaatje=Calibration plate|Kalibráló lemez|Placă de calibrare;Proefplaatje=Test panel|Próbalemez|Panou de test;Krijt=Chalk|Kréta|Cretă;Verfstift=Paint marker|Festékes filctoll|Marker cu vopsea;Spuitkrijt=Marking spray|Jelölő spray|Spray de marcaj;Zaagblad=Saw blade|Fűrészlap|Pânză de ferăstrău;Snijmes=Cutting knife|Vágókés|Cuțit de tăiat;Schuurmachine=Sander|Csiszológép|Șlefuitor;Trilplaat=Vibrating plate|Lapvibrátor|Placă vibrantă;Heftruckpallet=Forklift pallet|Targoncaraklap|Palet pentru stivuitor;Steekwagen=Sack truck|Kézikocsi|Cărucior de transport;Rolcontainer=Roll container|Gurulós konténer|Container cu roți;Afvalbak=Waste bin|Hulladékgyűjtő|Coș de gunoi;Jerrycan=Jerrycan|Kanna|Canistră;Maatbeker=Measuring jug|Mérőpohár|Cană gradată;Weegschaal=Scales|Mérleg|Cântar;EHBO-doos=First aid kit|Elsősegélydoboz|Trusă de prim ajutor;Oogspoelfles=Eye wash bottle|Szemöblítő palack|Flacon pentru spălarea ochilor;Brandblusser=Fire extinguisher|Tűzoltó készülék|Stingător;maat=size|méret|mărime;korrel=grit|szemcse|granulație;lengte=length|hossz|lungime;breedte=width|szélesség|lățime;dikte=thickness|vastagság|grosime;rood=red|piros|roșu;blauw=blue|kék|albastru;groen=green|zöld|verde;geel=yellow|sárga|galben;zwart=black|fekete|negru;wit=white|fehér|alb;oranje=orange|narancs|portocaliu;grijs=grey|szürke|gri;bruin=brown|barna|maro;transparant=transparent|átlátszó|transparent;klein=small|kicsi|mic;groot=large|nagy|mare;middel=medium|közepes|mediu;lang=long|hosszú|lung;kort=short|rövid|scurt;dun=thin|vékony|subțire;dik=thick|vastag|gros;fijn=fine|finom|fin;grof=coarse|durva|grosier;hittebestendig=heat resistant|hőálló|termorezistent;wegwerp=disposable|eldobható|de unică folosință;gevoerd=lined|bélelt|căptușit;ongevoerd=unlined|béleletlen|necăptușit;verzinkt=galvanised|horganyzott|zincat;rvs=stainless steel|rozsdamentes acél|oțel inoxidabil;Schuurpapier=Sandpaper|Csiszolópapír|Hârtie abrazivă;Schuurband=Sanding belt|Csiszolószalag|Bandă abrazivă;Crepe tape=Masking tape|Krepp szalag|Bandă crep;Straaltape=Blasting tape|Szórószalag|Bandă de sablare;Straal tape=Blasting tape|Szórószalag|Bandă de sablare;Reserve messen=Spare blades|Tartalék pengék|Lame de rezervă;Reserve mesjes=Spare blades|Tartalék pengék|Lame de rezervă;Spuitmasker=Spray mask|Festőmaszk|Mască de vopsit;Spuitoverall=Spray overall|Festőoverál|Salopetă de vopsit;Touch-up verfblik=Touch-up paint tin|Javítófesték doboz|Cutie vopsea retuș;Touch up verfblik=Touch-up paint tin|Javítófesték doboz|Cutie vopsea retuș;Touch-up verharder blik=Touch-up hardener tin|Javító edző doboz|Cutie întăritor retuș;Touch up verharder blik=Touch-up hardener tin|Javító edző doboz|Cutie întăritor retuș;Touch-up=Touch-up|Javítás|Retuș;Penseel=Artist brush|Ecset|Pensulă;Kwast=Brush|Ecset|Pensulă;Smeervet=Grease|Kenőzsír|Vaselină;Handschoen=Glove|Kesztyű|Mănușă;Overall=Overall|Overál|Salopetă;Masker=Mask|Maszk|Mască;Filter=Filter|Szűrő|Filtru;Slang=Hose|Tömlő|Furtun;Tape=Tape|Ragasztószalag|Bandă;Mes=Knife|Kés|Cuțit;Messen=Knives|Kések|Cuțite;Schijf=Disc|Tárcsa|Disc;Borstel=Brush|Kefe|Perie;Doek=Cloth|Kendő|Lavetă;Doeken=Cloths|Kendők|Lavete;Zak=Bag|Zsák|Sac;Zakken=Bags|Zsákok|Saci;Bus=Tin|Doboz|Doză;Blik=Tin|Doboz|Cutie;Pot=Tub|Vödör|Găleată;Haak=Hook|Horog|Cârlig;Haken=Hooks|Horgok|Cârlige;Draad=Wire|Drót|Sârmă;Band=Strap|Heveder|Chingă;Rol=Roll|Tekercs|Rolă;Set=Set|Készlet|Set;Onderdelen=Parts|Alkatrészek|Piese;Reserve=Spare|Tartalék|De rezervă;Hijsband=Lifting sling|Emelőheveder|Chingă de ridicare;Hijsbanden=Lifting slings|Emelőhevederek|Chingi de ridicare").split(";")){
+    const i=r.indexOf("="); if(i<0) continue;
+    const n=r.slice(i+1).split("|");
+    t[r.slice(0,i).trim().toLowerCase()]={en:n[0],hu:n[1],ro:n[2]};
+  }
+  return t;
+})();
+
+/** De vertalingen die zijn opgehaald of met de hand verbeterd. Ze staan bij de
+ *  gedeelde instellingen, dus alle apparaten profiteren van hetzelfde werk. */
+function vertaalDeel(){
+  const bh=beheerDeel();
+  if(!bh.vertalingen||typeof bh.vertalingen!=="object") bh.vertalingen={};
+  return bh.vertalingen;
+}
+const vertaalSleutel=s=>String(s||"").trim().toLowerCase();
+
+/** "RAL 7016 Antracietgrijs" wordt "RAL 7016 Anthracite grey". De officiële
+ *  RAL-namen staan al in de app, dus die 217 regels hoeven in geen lijst. */
+function ralOmschrijving(tekst,taal){
+  const m=/^RAL\s*(\d{3,4})\s*(.*)$/i.exec(String(tekst||"").trim());
+  if(!m||!m[2]) return null;
+  const naam=(RAL_TALEN[m[1]]||{})[taal];
+  return naam?("RAL "+m[1]+" "+naam):null;
+}
+
+/** Een woord of zinnetje in de taal van het scherm. Met `stil` wordt er niets
+ *  opgehaald — dat is voor zoeken en meldingen, die niet in beeld staan. */
+function woordVertaald(nl,stil){
+  nl=String(nl||"");
+  const taal=huidigeTaal();
+  if(taal==="nl"||!nl.trim()) return nl;
+  const ral=ralOmschrijving(nl,taal);
+  if(ral) return ral;
+  const s=vertaalSleutel(nl);
+  const eigen=vertaalDeel()[s];
+  if(eigen&&eigen[taal]) return eigen[taal];
+  const vast=OMS_WOORDEN[s];
+  if(vast&&vast[taal]) return vast[taal];
+  const metMaat=woordMetMaat(nl,taal);
+  if(metMaat) return metMaat;
+  if(!stil) haalVertaling(nl,taal);  // eenmalig ophalen, op de achtergrond
+  return nl;                         // zolang dat loopt blijft het Nederlands staan
+}
+/** Eén woord of woordgroep opzoeken, zonder iets op te halen. */
+function zoekWoord(tekst,taal){
+  const s=vertaalSleutel(tekst);
+  if(!s) return "";
+  const eigen=vertaalDeel()[s], vast=OMS_WOORDEN[s];
+  return (eigen&&eigen[taal])||(vast&&vast[taal])||"";
+}
+/** Veel omschrijvingen zijn een bekend woord met een maat of toevoeging
+ *  erachter: "Spuitmond 1,8 mm", "Schuurpapier korrel 80". We zoeken het
+ *  langste stuk vooraan dat we kennen, vertalen dat, en doen met de rest
+ *  hetzelfde woord voor woord. Wat we niet kennen blijft staan. Scheelt een
+ *  lijst vol varianten van hetzelfde artikel. */
+function woordMetMaat(nl,taal){
+  const delen=String(nl||"").trim().split(/\s+/);
+  if(delen.length<2) return "";
+  for(let n=delen.length-1;n>=1;n--){
+    const kop=zoekWoord(delen.slice(0,n).join(" "),taal);
+    if(!kop) continue;
+    const staart=delen.slice(n).map(w=>zoekWoord(w,taal)||w).join(" ");
+    return kop+" "+staart;
+  }
+  return "";
+}
+/** De omschrijving zoals hij op het scherm hoort te staan. */
+const omschrijvingVan=a=>woordVertaald((a&&a.naam)||"",false);
+const omschrijvingStil=a=>woordVertaald((a&&a.naam)||"",true);
+
+/* ============================================================
+   AUTOMATISCH VERTALEN
+   Staat een omschrijving niet in de vaste woordenlijst, dan wordt hij één
+   keer bij een vertaaldienst opgehaald en daarna bewaard bij de gedeelde
+   instellingen. Alle apparaten profiteren daarvan. Lukt het niet — geen
+   internet, dienst plat — dan blijft het Nederlands staan en werkt de app
+   gewoon door. Er wordt nooit iets anders verstuurd dan het ene woord.
+   ============================================================ */
+const VERTAALDIENST="https://api.mymemory.translated.net/get";
+let vertaalGedaan={};     // wat al geprobeerd is, om niet te blijven vragen
+let vertaalLopend=0;      // hooguit een paar tegelijk
+let vertaalTeken=null;
+
+const vertalenAan=()=>beheerDeel().vertalenUit!==true;
+function zetVertalen(aan){
+  if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
+  const bh=beheerDeel();
+  bh.vertalenUit=!aan; beheerGewijzigd("vertalenUit");
+  opslaan(); teken();
+}
+
+/** Eén woord ophalen. Mislukt het, dan gebeurt er verder niets. */
+async function haalVertaling(nl,taal){
+  if(!vertalenAan()||!nl||!taal||taal==="nl") return;
+  const s=vertaalSleutel(nl)+"|"+taal;
+  if(vertaalGedaan[s]||vertaalLopend>=3) return;
+  vertaalGedaan[s]=true; vertaalLopend++;
+  try{
+    const uit=await vraagDienst(nl,taal);
+    if(uit){
+      bewaarVertaling(nl,taal,uit);
+      clearTimeout(vertaalTeken);
+      vertaalTeken=setTimeout(()=>{ if(gebruiker) teken(); },500);
+    }
+  }catch(e){}
+  vertaalLopend--;
+}
+
+/** Het eigenlijke verzoek. Geeft de vertaling terug, of niets. */
+async function vraagDienst(nl,taal){
+  const u=VERTAALDIENST+"?q="+encodeURIComponent(nl)+"&langpair=nl%7C"+encodeURIComponent(taal);
+  const r=await fetch(u,{cache:"no-store"});
+  if(!r.ok) return "";
+  const d=await r.json();
+  const uit=((d&&d.responseData&&d.responseData.translatedText)||"").trim();
+  if(!uit||String(d.responseStatus)!=="200") return "";
+  // De dienst geeft bij twijfel het woord onvertaald terug, of een melding
+  // in hoofdletters. Daar hebben we niets aan, dus die bewaren we niet.
+  if(uit.toLowerCase()===vertaalSleutel(nl)) return "";
+  if(/^[A-Z '%-]+$/.test(uit)&&uit.length>12) return "";
+  return uit;
+}
+
+/** Een vertaling vastleggen. Leeg maken wist hem weer. */
+function bewaarVertaling(nl,taal,tekst){
+  const v=vertaalDeel(), s=vertaalSleutel(nl);
+  if(!s) return;
+  v[s]=v[s]||{};
+  if(tekst&&tekst.trim()) v[s][taal]=tekst.trim();
+  else delete v[s][taal];
+  if(!Object.keys(v[s]).length) delete v[s];
+  beheerGewijzigd("vertalingen",s);
+  opslaan();
+}
+
+/** Testknop in de instellingen: werkt de vertaler op dit netwerk? */
+async function testVertaler(){
+  staat.vertaalTest={bezig:true}; teken();
+  try{
+    const uit=await vraagDienst("Werkhandschoenen","en");
+    staat.vertaalTest=uit?{ok:true,tekst:uit}:{ok:false};
+  }catch(e){ staat.vertaalTest={ok:false}; }
+  teken();
+}
+
+/** Het blokje in de instellingen: aan of uit, en een knop om te kijken of
+ *  de vertaler het op dit netwerk doet. */
+function vertaalVak(){
+  const aan=vertalenAan();
+  const tst=staat.vertaalTest;
+  const uitslag=!tst?"":tst.bezig
+    ? `<div class="melding info">${t("vertaaltestbezig")}</div>`
+    : tst.ok
+      ? `<div class="melding info">${t("vertaaltestok")} — <b>Werkhandschoenen</b> → <b>${esc(tst.tekst)}</b></div>`
+      : `<div class="melding let">${t("vertaaltestfout")}</div>`;
+  return `
+    <h4 class="opschrift" style="margin-bottom:8px">${t("vertalen")}${infoBij("vertaaluitleg")}</h4>
+    ${infoTekst("vertaaluitleg")}
+    <div class="rechtrij">
+      <span><b>${t("vertalenauto")}</b><br>
+        <span class="klein flauw">${t("vertalenautosub")}</span></span>
+      <div class="richting opKaart" style="margin:0">
+        <button class="${aan?"actief":""}" onclick="app.zetVertalen(true)">${t("aan")}</button>
+        <button class="${aan?"":"actief"}" onclick="app.zetVertalen(false)">${t("uit")}</button>
+      </div>
+    </div>
+    <button class="knop rand breed" style="margin:10px 0 6px"
+      onclick="app.testVertaler()">${t("vertaaltesten")}</button>
+    ${uitslag}
+    <div class="klein flauw" style="margin-bottom:22px">${t("vertaalaantal")
+      .replace("{n}",Object.keys(vertaalDeel()).length)}</div>`;
+}
+
+/** Onder de omschrijving: zo staat het er nu in deze taal, en je kunt het
+ *  verbeteren. Alleen zichtbaar als de app niet op Nederlands staat. */
+function vertaalVeld(nl){
+  const taal=huidigeTaal();
+  if(taal==="nl"||!isMagazijn()||!String(nl||"").trim()) return "";
+  const s=vertaalSleutel(nl);
+  const nu=omschrijvingStil({naam:nl});
+  return `<label class="veld"><span>${t("vertaling")} (${esc(TALEN[taal]||taal)})</span>
+    <input id="fVertaling" value="${esc(nu===nl?"":nu)}" placeholder="${esc(nl)}"
+           data-woord="${esc(s)}"></label>
+    <div class="klein flauw" style="margin:-6px 0 12px">${t("vertalingsub")}</div>`;
+}
+
 /** De eenheid van dit artikel; bij coating is die vast per afdeling. */
 const artEenheid=(a,n)=>{
   if(!isMagazijn()) return n===undefined?eenheid():eenheidBij(n);
@@ -1633,7 +1836,7 @@ const kgTekst=(g,a)=>gramNaarKg(g)+" "+(a?artEenheid(a,g):eenheidBij(g));
    localStorage. Dan werkt de app gewoon door, alleen zonder bewaren.
    ============================================================ */
 const SLEUTEL="geuzevoorraad_v2";
-const VERSIE="2026-10-08 · v93";
+const VERSIE="2026-10-21 · v96";
 
 /* ============================================================
    AFDELINGEN — poedercoating en natlak hebben elk een eigen voorraad
@@ -1734,7 +1937,7 @@ function zetRecht(account,recht,aan){
   bh.rechten=bh.rechten||{};
   bh.rechten[account]=bh.rechten[account]||{};
   bh.rechten[account][recht]=!!aan;
-  bh.gewijzigd=Date.now();
+  beheerGewijzigd("rechten",account);
   opslaan(); teken();
 }
 /** Terug naar de standaard voor dit account. */
@@ -1743,7 +1946,7 @@ function herstelRechten(account){
   const bh=beheerDeel();
   if(bh.rechten&&bh.rechten[account]){
     delete bh.rechten[account];
-    bh.gewijzigd=Date.now();
+    beheerGewijzigd("rechten",account);
     opslaan(); teken();
   }
 }
@@ -1761,6 +1964,7 @@ function rechtenVak(){
   const bh=beheerDeel();
   const eigen=(bh.rechten||{})[account]||{};
   return `
+    ${vertaalVak()}
     <h4 class="opschrift" style="margin-bottom:8px">${t("rechten")}${infoBij("rechtenuitleg")}</h4>
     ${infoTekst("rechtenuitleg")}
     <div class="accountkiezer">
@@ -1811,7 +2015,7 @@ function zetScannen(afd,aan){
   if(!gebruiker||gebruiker.rol!=="admin") return toast(t("alleenadmin"));
   const bh=beheerDeel();
   bh.scannen[afd]=aan;
-  bh.gewijzigd=Date.now();
+  beheerGewijzigd("scannen");
   if(!aan&&afd===staat.afdeling){ staat.uitScan=false; stopCamera(); }
   opslaan(); teken();
 }
@@ -1922,6 +2126,13 @@ function laden(){
     const g=JSON.parse(ruw);
     const nieuw=JSON.parse(JSON.stringify(LEEG));
     nieuw.instellingen=Object.assign(nieuw.instellingen,g.instellingen||{});
+    // De gedeelde instellingen horen het afsluiten te overleven. Deden ze dat
+    // niet, dan begon een toestel met lege rechten en kon het die bij het
+    // opstarten over die van de anderen heen schrijven.
+    if(g.beheer&&typeof g.beheer==="object")
+      nieuw.beheer=Object.assign(nieuw.beheer,g.beheer);
+    if(g.versies&&typeof g.versies==="object") nieuw.versies=g.versies;
+    if(Array.isArray(g.uitgewisseld)) nieuw.uitgewisseld=g.uitgewisseld;
     if(g.afdelingen){
       for(const k in nieuw.afdelingen)
         if(g.afdelingen[k]) nieuw.afdelingen[k]=Object.assign(legeAfdeling(),g.afdelingen[k]);
@@ -2057,13 +2268,13 @@ const kleurVan=a=>{
 };
 const titel=a=>{
   if(!a) return "?";
-  if(isMagazijn()) return a.naam||a.kleur||"?";
+  if(isMagazijn()) return omschrijvingVan(a)||a.kleur||"?";
   const naam=ralNaam(a.kleur)||kleurnaamVan(a);
   return a.kleur+(naam?" "+naam:"");
 };
 const hoofdregel=a=>{
   if(!a) return "";
-  if(a.soort==="magazijn"||isMagazijn()) return (a.merk?a.merk+" · ":"")+(a.naam||a.kleur||"");
+  if(a.soort==="magazijn"||isMagazijn()) return (a.merk?a.merk+" · ":"")+(omschrijvingVan(a)||a.kleur||"");
   // Een glansgraad van 0 betekent "nog niet ingevuld"; die tonen we niet als
   // "0 GU", want dat zou mat betekenen.
   return [a.merk,a.kleur,a.glans?glansNaam(a.glans):""].filter(Boolean).join(" · ");
@@ -2106,6 +2317,7 @@ const staat={scherm:"voorraad",artikelId:null,boekId:null,zoek:"",
   boekModus:"uit",scanBarcode:false,nieuwForm:{},inboekZoek:"",inboekArtikelId:null,
   lijstWeg:false,backupWeg:false,bestelLev:null,
   bevestig:null,info:null,kopies:null,kopiesBezig:false,toonWw:false,rechtAccount:"Kantoor",
+  vertaalTest:null,
   vraagId:null,vraagNieuw:false,vraagBewerk:false,berichtTab:"vragen",vraagForm:null,
   scanDoel:"",scanArtikelId:null,artikelForm:{},
   uitScan:false,uitZoek:""};
@@ -2419,7 +2631,7 @@ function bewaarLevMail(){
   if(!e) return;
   const bh=beheerDeel();
   levMails()[staat.bestelLev]=e.value.trim();
-  bh.gewijzigd=Date.now();
+  beheerGewijzigd("levMail",staat.bestelLev);
   opslaan();
 }
 async function kopieerBestelling(){
@@ -3437,7 +3649,24 @@ async function syncRonde(){
    Bij een boeking gaat alleen die ene regel over de lijn, niet alles.
    ============================================================ */
 let stroom=null, stroomHerstel=null, aanmelden=null, laatsteStroom=0, waakhond=null;
-let verstuurd={};          // wat dit apparaat al heeft weggeschreven
+let verstuurd={};          // wat dit apparaat al heeft uitgewisseld
+const ONBEKEND="\u0000";    // de regel bestond al; de inhoud weten we niet meer
+
+/* Welke regels dit apparaat al met de database heeft uitgewisseld, wordt ook
+   bewaard als de app wordt afgesloten. Zonder dat begint een toestel bij het
+   opstarten blanco: het ziet dan niet dat iemand anders iets verwijderd heeft
+   en schrijft zijn eigen oude lijst gewoon terug. Zo kwamen verwijderde
+   artikelen later weer tevoorschijn. */
+function onthoudUitgewisseld(){
+  const k=Object.keys(verstuurd);
+  const oud=bestand.uitgewisseld||[];
+  if(k.length===oud.length&&k.every((x,i)=>x===oud[i])) return false;
+  bestand.uitgewisseld=k;
+  return true;
+}
+function herstelUitgewisseld(){
+  (bestand.uitgewisseld||[]).forEach(k=>{ if(!(k in verstuurd)) verstuurd[k]=ONBEKEND; });
+}
 const firebaseAan=()=>(bestand.instellingen.syncSoort||"firebase")==="firebase";
 
 function firebaseBasis(){
@@ -3482,18 +3711,88 @@ function ontleed(delen,data,uit){
   for(const k in data) ontleed(delen.concat(String(k).split("/").filter(Boolean)),data[k],uit);
 }
 
+
+/* ============================================================
+   BEHEER SAMENVOEGEN
+   De gedeelde instellingen werden als één blok overgenomen: het nieuwste
+   tijdstempel won, en daarmee ook alle andere onderdelen van dat toestel.
+   Zette de beheerder een recht aan terwijl een telefoon net zijn uurkopie
+   bijwerkte — of liep die klok een minuut voor — dan draaide die telefoon het
+   recht zo weer terug. Daarom houdt elk onderdeel nu zijn eigen tijdstempel
+   bij, en de rechten zelfs per account.
+   ============================================================ */
+function tijdenVan(bh){ if(!bh.tijden||typeof bh.tijden!=="object") bh.tijden={}; return bh.tijden; }
+/** Een onderdeel is gewijzigd: eigen stempel zetten (en het oude blokstempel
+ *  bijwerken, zodat toestellen met een oudere versie het ook zien). */
+function beheerGewijzigd(veld,sleutel){
+  const bh=beheerDeel(), tj=tijdenVan(bh), nu=Date.now();
+  if(sleutel===undefined) tj[veld]=nu;
+  else { tj[veld]=tj[veld]&&typeof tj[veld]==="object"?tj[veld]:{}; tj[veld][sleutel]=nu; }
+  bh.gewijzigd=nu;
+}
+
+const BEHEERVELDEN=["scannen","vertalenUit","kopieDag","kopieUur","laatsteBestandBackup"];
+const BEHEERKAARTEN=["rechten","vertalingen","levMail"];   // per sleutel samenvoegen
+
+function voegBeheerSamen(binnen){
+  if(!binnen||typeof binnen!=="object") return false;
+  const bh=beheerDeel(), tj=tijdenVan(bh);
+  const bt=(binnen.tijden&&typeof binnen.tijden==="object")?binnen.tijden:{};
+  const blokIn=binnen.gewijzigd||0, blokHier=bh.gewijzigd||0;
+  let veranderd=false;
+
+  // Geen stempels aan beide kanten? Dan geldt de oude regel voor dat onderdeel.
+  const wint=(a,b)=>(a!=null||b!=null)?((a||0)>(b||0)):(blokIn>blokHier);
+  const kopie=x=>x===undefined?undefined:JSON.parse(JSON.stringify(x));
+
+  BEHEERVELDEN.forEach(veld=>{
+    if(!wint(bt[veld],tj[veld])) return;
+    if(binnen[veld]===undefined&&bh[veld]===undefined) return;
+    if(JSON.stringify(bh[veld])===JSON.stringify(binnen[veld])){
+      if(bt[veld]!=null) tj[veld]=bt[veld];
+      return;
+    }
+    if(binnen[veld]===undefined) delete bh[veld]; else bh[veld]=kopie(binnen[veld]);
+    tj[veld]=bt[veld]||blokIn;
+    veranderd=true;
+  });
+
+  BEHEERKAARTEN.forEach(veld=>{
+    const hier=bh[veld]&&typeof bh[veld]==="object"?bh[veld]:null;
+    const daar=binnen[veld]&&typeof binnen[veld]==="object"?binnen[veld]:null;
+    if(!hier&&!daar) return;
+    bh[veld]=hier||{};
+    const tHier=(tj[veld]&&typeof tj[veld]==="object")?tj[veld]:(tj[veld]={});
+    const tDaar=(bt[veld]&&typeof bt[veld]==="object")?bt[veld]:{};
+    const sleutels={};
+    [bh[veld],daar||{},tHier,tDaar].forEach(o=>{ for(const k in o) sleutels[k]=true; });
+    for(const k in sleutels){
+      if(!wint(tDaar[k],tHier[k])) continue;
+      const nieuw=daar?daar[k]:undefined;
+      if(JSON.stringify(bh[veld][k])===JSON.stringify(nieuw)){
+        if(tDaar[k]!=null) tHier[k]=tDaar[k];
+        continue;
+      }
+      if(nieuw===undefined) delete bh[veld][k]; else bh[veld][k]=kopie(nieuw);
+      tHier[k]=tDaar[k]||blokIn;
+      veranderd=true;
+    }
+    if(!Object.keys(bh[veld]).length&&!Object.keys(tHier).length) delete bh[veld];
+  });
+
+  if(blokIn>blokHier) bh.gewijzigd=blokIn;
+  return veranderd;
+}
+
 /** Eén binnengekomen regel verwerken, met dezelfde regels als voorheen:
  *  boekingen komen erbij, artikelen en checks volgen het laatste wijzigmoment. */
 function pasRegelToe(sleutel,waarde){
   const d=sleutel.split("/");
   if(d[0]==="beheer"){
     if(!waarde) return false;
-    if((waarde.gewijzigd||0)>(beheerDeel().gewijzigd||0)){
-      bestand.beheer=JSON.parse(JSON.stringify(waarde));
-      if(!scanAan()){ staat.uitScan=false; staat.scanBarcode=false; staat.scanDoel=""; }
-      return true;
-    }
-    return false;
+    const veranderd=voegBeheerSamen(waarde);
+    if(veranderd&&!scanAan()){ staat.uitScan=false; staat.scanBarcode=false; staat.scanDoel=""; }
+    return veranderd;
   }
   if(d[0]==="versies"){
     bestand.versies=bestand.versies||{};
@@ -3612,8 +3911,9 @@ function verwerkBinnen(regels){
     if(d[0]==="afd"&&(d[2]==="mutaties"||d[2]==="artikelen")) raakt[d[1]]=true;
   }
   for(const s in raakt) herberekenAfdeling(s);
+  const lijstGewijzigd=onthoudUitgewisseld();
+  if(veranderd||lijstGewijzigd) opslaanStil();
   if(veranderd){
-    opslaanStil();
     if(gebruiker){
       vanSync=true;
       try{ teken(); } finally { vanSync=false; }
@@ -3638,11 +3938,11 @@ function startWaakhond(){
   clearInterval(waakhond);
   waakhond=setInterval(()=>{
     if(!firebaseAan()||!syncActief()||!stroom) return;
-    if(Date.now()-laatsteStroom<120000) return;
+    if(Date.now()-laatsteStroom<90000) return;   // ruim drie gemiste levenstekens
     syncStand.ok=false; syncStand.fout=t("geenlevensteken");
     werkSyncLampjeBij();
     startStroom();
-  },30000);
+  },20000);
 }
 /* Kom je terug bij de app of is het netwerk terug, dan meteen kijken in plaats
    van tot twee minuten wachten. */
@@ -3751,6 +4051,7 @@ async function schrijfFirebase(){
         if(wijziging[k]===null) delete verstuurd[k];
         else verstuurd[k]=JSON.stringify(wijziging[k]);
       }
+      if(onthoudUitgewisseld()) opslaanStil();
     }
   }catch(e){ syncStand.ok=false; syncStand.fout=String(e&&e.message||e); }
   syncBezig=false;
@@ -3818,12 +4119,12 @@ async function maakDagKopie(){
   const dag=dagSleutel(nu), uur=uurSleutel(nu);
 
   if(bh.kopieDag!==dag){
-    bh.kopieDag=dag; bh.gewijzigd=Date.now(); opslaan();
+    bh.kopieDag=dag; beheerGewijzigd("kopieDag"); opslaan();
     await schrijfKopie(dag,"",BEWAARDAGEN_KOPIE);
   }
   const h=nu.getHours();
   if(h>=UURKOPIE_VAN&&h<=UURKOPIE_TOT&&bh.kopieUur!==uur){
-    bh.kopieUur=uur; bh.gewijzigd=Date.now(); opslaan();
+    bh.kopieUur=uur; beheerGewijzigd("kopieUur"); opslaan();
     await schrijfKopie(uur,"u",BEWAARUREN_KOPIE);
   }
 }
@@ -3893,6 +4194,7 @@ function startSync(){
   stopSync();
   syncStand.aan=syncActief();
   if(!syncStand.aan) return;
+  herstelUitgewisseld();
   zetHerstelLuisteraars();
   if(firebaseAan()){ startStroom(); return; }
   syncRonde();
@@ -4011,7 +4313,7 @@ const artnrLijst=()=>[...new Set(db.artikelen.map(a=>(a.artikelnummer||"").trim(
 const leveranciers=()=>[...new Set(db.artikelen.map(a=>(a.leverancier||"").trim()).filter(Boolean))].sort();
 /** Alles waarop je kunt zoeken, in de taal die op het scherm staat. */
 const zoektekst=a=>isMagazijn()
-  ? `${a.leverancier||""} ${a.merk} ${a.naam||""} ${catNaam(a.categorie)} ${a.categorie||""} ${a.maat||""} ${a.code} ${a.barcode||""}`
+  ? `${a.leverancier||""} ${a.merk} ${a.naam||""} ${omschrijvingStil(a)} ${catNaamStil(a.categorie)} ${a.categorie||""} ${a.maat||""} ${a.code} ${a.barcode||""}`
   : `${a.merk} ${typeNaam(a.type)} ${a.type} ${a.serie||""} ${a.artikelnummer||""} ${a.leverancier||""} ${a.kleur} ${a.kleurnaam||""} ${ralNaam(a.kleur)} ${glansNaam(a.glans)} ${a.code} ${a.barcode||""}`;
 
 function blokVan(soort){
@@ -4110,6 +4412,7 @@ function voorraadDetail(){
         <label class="veld"><span>${t("merk")}</span><input id="fMerk" list="merken" value="${esc(af.fMerk!==undefined?af.fMerk:a.merk)}"></label>
         <label class="veld"><span>${t("omschrijving")}</span>
           <input id="fKleur" value="${esc(af.fKleur!==undefined?af.fKleur:(a.naam||""))}" placeholder="Nitril handschoenen"></label>
+        ${vertaalVeld(af.fKleur!==undefined?af.fKleur:(a.naam||""))}
         <label class="veld"><span>${t("maat")}</span>
           <input id="fType" value="${esc(af.fType!==undefined?af.fType:(a.maat||""))}" placeholder="L"></label>
         <label class="veld"><span>${t("eenheidveld")}</span>
@@ -4270,6 +4573,10 @@ function slaArtikelOp(){
       maxVoorraadGram:kgNaarGram(v("fMax")),
       actief:v("fActief")==="1"
     });
+    // De verbeterde vertaling hoort bij het woord, niet bij dit ene artikel:
+    // zo is hij meteen goed bij elk artikel met dezelfde omschrijving.
+    const veld=document.getElementById("fVertaling");
+    if(veld) bewaarVertaling(naam,huidigeTaal(),veld.value.trim());
     staat.artikelForm={};
     opslaan(); toast(t("opgeslagen")); teken();
     return;
@@ -5375,13 +5682,16 @@ function backupNodig(){
 function exporteer(){
   if(!mag("backup")) return toast(t("magnietmeer"));
   // Alles bewaren: alle afdelingen, hun boekingen, checks, historie en instellingen.
-  const blob=new Blob([JSON.stringify(bestand,null,2)],{type:"application/json"});
+  // De lijst met al uitgewisselde regels hoort bij dit toestel, niet bij de
+  // gegevens zelf; die laten we uit de back-up.
+  const pak=Object.assign({},bestand); delete pak.uitgewisseld;
+  const blob=new Blob([JSON.stringify(pak,null,2)],{type:"application/json"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
   a.download="geuzevoorraad-"+new Date().toISOString().slice(0,10)+".json";
   a.click(); URL.revokeObjectURL(a.href); toast(t("backupgedownload"));
   const bh=beheerDeel();
-  bh.laatsteBestandBackup=Date.now(); bh.gewijzigd=Date.now();
+  bh.laatsteBestandBackup=Date.now(); beheerGewijzigd("laatsteBestandBackup");
   opslaan(); teken();
 }
 function importeer(input){
@@ -5399,6 +5709,9 @@ function importeer(input){
       vraagBevestiging(t("vraagvervang"),t("backupinlezen"),()=>{
       if(nieuwStijl){
         bestand=JSON.parse(JSON.stringify(n));
+        // Wat ingelezen wordt is vanaf nu de waarheid en gaat naar de database;
+        // de boekhouding van dit toestel begint daarom opnieuw.
+        delete bestand.uitgewisseld;
       }else{
         // Back-up van vroeger: één afdeling, die zetten we terug waar je nu staat.
         bestand.afdelingen[staat.afdeling]=Object.assign(legeAfdeling(),n);
@@ -5581,6 +5894,7 @@ function vulVoorbeeld(){
    14. START
    ============================================================ */
 const app={ga,thema,zetTaal,zetScannen,laadOpnieuw,wisselWachtwoord,wisselInfo,
+  zetVertalen,testVertaler,
   zetRecht,herstelRechten,kiesRechtAccount,bevestigJa,bevestigNee,laadPoederlijst,zetKeuzeZoek,kleurErbij,toonBarcodeHint,
   haalKopieLijst,zetKopieTerug,verbergBackupBalk,
   toonBestelMail,sluitBestelMail,kopieerBestelling,openBestelMail,verbergLijstUitnodiging,laadMagazijnlijst,kiesIcoon,vraagMeldingRecht,zetGeluid,nieuweVraag,plaatsReactie,wisselVraagStatus,
